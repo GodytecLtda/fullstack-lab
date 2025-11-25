@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fullstack Lab do Adelmo 🚀</title>
+</head>
+<body>
+  <h1>Fullstack Lab do Adelmo 🚀</h1>
+
+  <h2>Teste da API</h2>
+
+  <button id="btnHealth">Chamar /api/health</button>
+  <pre id="healthResult"></pre>
+
+  <button id="btnMsg">Chamar /api/message</button>
+  <pre id="msgResult"></pre>
+
+  <hr />
+
+  <h2>Cadastro de Usuário</h2>
+
+  <form id="userForm">
+    <label>
+      Nome:
+      <input type="text" id="nameInput" required />
+    </label>
+    <br /><br />
+    <label>
+      E-mail:
+      <input type="email" id="emailInput" required />
+    </label>
+    <br /><br />
+    <button type="submit">Cadastrar usuário</button>
+  </form>
+
+  <pre id="userCreateResult"></pre>
+
+  <h3>Lista de usuários</h3>
+  <button id="btnLoadUsers">Carregar /api/users</button>
+  <pre id="usersList"></pre>
+
+  <script>
+    async function callApi(path, outputId) {
+      const out = document.getElementById(outputId);
+      out.textContent = "Carregando...";
+      try {
+        const res = await fetch(path);
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        out.textContent = "Erro: " + err.message;
+      }
+    }
+
+    // Botões de teste
+    document
+      .getElementById("btnHealth")
+      .addEventListener("click", () => callApi("/api/health", "healthResult"));
+
+    document
+      .getElementById("btnMsg")
+      .addEventListener("click", () => callApi("/api/message", "msgResult"));
+
+    // Cadastro de usuário
+    const form = document.getElementById("userForm");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault(); // não recarregar a página
+
+      const name = document.getElementById("nameInput").value.trim();
+      const email = document.getElementById("emailInput").value.trim();
+      const out = document.getElementById("userCreateResult");
+      out.textContent = "Enviando...";
+
+      if (!name || !email) {
+        out.textContent = "Preencha nome e e-mail.";
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          out.textContent = "Erro ao cadastrar: " + (data.error || res.status);
+          return;
+        }
+
+        out.textContent = "Usuário criado:\n" + JSON.stringify(data, null, 2);
+
+        // limpar campos
+        form.reset();
+      } catch (err) {
+        out.textContent = "Erro de rede: " + err.message;
+      }
+    });
+
+    // Listar usuários
+    document
+      .getElementById("btnLoadUsers")
+      .addEventListener("click", () => callApi("/api/users", "usersList"));
+  </script>
+</body>
+</html>

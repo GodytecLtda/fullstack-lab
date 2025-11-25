@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: fs_db
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: appsecret
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+  api:
+    build: ./backend
+    container_name: fs_api
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"   # só pra teste direto na API
+    networks:
+      - app_net
+
+  frontend:
+    image: nginx:alpine
+    container_name: fs_frontend
+    depends_on:
+      - api
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:80"
+    networks:
+      - app_net
+
+volumes:
+  db_data:
+
+networks:
+  app_net:
+    driver: bridge
