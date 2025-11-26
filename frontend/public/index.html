@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fullstack Lab do Adelmo 🚀</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1, h2, h3 {
+      margin-top: 30px;
+    }
+    pre {
+      background: #f3f3f3;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    input {
+      padding: 6px;
+      margin-top: 4px;
+      width: 250px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    hr {
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Fullstack Lab do Adelmo 🚀</h1>
+
+<!-- -------------------------------------------------------------
+     TESTE DA API
+-------------------------------------------------------------- -->
+<h2>Teste da API</h2>
+
+<button id="btnHealth">Chamar /api/health</button>
+<pre id="healthResult"></pre>
+
+<button id="btnMsg">Chamar /api/message</button>
+<pre id="msgResult"></pre>
+
+<hr>
+
+<!-- -------------------------------------------------------------
+     CADASTRO REAL DE USUÁRIO
+-------------------------------------------------------------- -->
+<h2>Cadastro de Usuário</h2>
+
+<form id="userForm">
+  <label>
+    Nome:
+    <input type="text" id="nameInput" required />
+  </label>
+
+  <label>
+    E-mail:
+    <input type="email" id="emailInput" required />
+  </label>
+
+  <label>
+    Senha:
+    <input type="password" id="passwordInput" required />
+  </label>
+
+  <button type="submit">Cadastrar usuário</button>
+</form>
+
+<pre id="userCreateResult"></pre>
+
+<hr>
+
+<!-- -------------------------------------------------------------
+     LISTA DE USUÁRIOS
+-------------------------------------------------------------- -->
+<h3>Lista de usuários</h3>
+
+<button id="btnLoadUsers">Carregar /api/users</button>
+<pre id="userslist"></pre>
+
+<hr>
+
+<!-- -------------------------------------------------------------
+     JAVASCRIPT
+-------------------------------------------------------------- -->
+<script>
+// Função genérica para chamar rotas GET
+async function callApi(path, outputId) {
+  const out = document.getElementById(outputId);
+  out.textContent = "Carregando...";
+
+  try {
+    const res = await fetch(path);
+    const data = await res.json();
+    out.textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    out.textContent = "Erro: " + err.message;
+  }
+}
+
+// Botões de teste
+document
+  .getElementById("btnHealth")
+  .addEventListener("click", () => callApi("/api/health", "healthResult"));
+
+document
+  .getElementById("btnMsg")
+  .addEventListener("click", () => callApi("/api/message", "msgResult"));
+
+// Cadastro real de usuário
+document.getElementById("userForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("nameInput").value.trim();
+  const email = document.getElementById("emailInput").value.trim();
+  const password = document.getElementById("passwordInput").value.trim();
+  const out = document.getElementById("userCreateResult");
+
+  out.textContent = "Enviando...";
+
+  try {
+    const res = await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await res.json();
+    out.textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    out.textContent = "Erro: " + err.message;
+  }
+});
+
+// Carregar lista de usuários
+document
+  .getElementById("btnLoadUsers")
+  .addEventListener("click", () => callApi("/api/users", "userslist"));
+</script>
+
+</body>
+</html>
