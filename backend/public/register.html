@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cadastro - Fullstack Lab do Adelmo 🚀</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+    .container {
+      max-width: 420px;
+      margin: 80px auto;
+      background: #020617;
+      padding: 24px 28px;
+      border-radius: 16px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      color: #9ca3af;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.9rem;
+    }
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px #2563eb44;
+    }
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 9px 0;
+      border-radius: 999px;
+      border: none;
+      background: #2563eb;
+      color: #f9fafb;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    button:hover {
+      filter: brightness(1.1);
+    }
+    .footer {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #9ca3af;
+      text-align: center;
+    }
+    a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    pre {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      background: #020617;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      white-space: pre-wrap;
+    }
+    .error {
+      color: #f97373;
+    }
+    .success {
+      color: #4ade80;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Criar conta</h1>
+  <p class="subtitle">Preencha os dados para criar seu usuário no laboratório.</p>
+
+  <label for="name">Nome</label>
+  <input id="name" type="text" placeholder="Seu nome completo" />
+
+  <label for="email">E-mail</label>
+  <input id="email" type="email" placeholder="voce@exemplo.com" />
+
+  <label for="password">Senha</label>
+  <input id="password" type="password" placeholder="Crie uma senha" />
+
+  <label for="password2">Confirmar senha</label>
+  <input id="password2" type="password" placeholder="Repita a senha" />
+
+  <button id="registerBtn">Cadastrar</button>
+
+  <pre id="result"></pre>
+
+  <div class="footer">
+    Já tem conta?
+    <a href="/login.html">Ir para o login</a>
+  </div>
+</div>
+
+<script>
+const resultEl = document.getElementById("result");
+const btn = document.getElementById("registerBtn");
+
+btn.addEventListener("click", async () => {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const password2 = document.getElementById("password2").value.trim();
+
+  resultEl.className = "";
+  resultEl.textContent = "";
+
+  if (!name || !email || !password || !password2) {
+    resultEl.className = "error";
+    resultEl.textContent = "Preencha todos os campos.";
+    return;
+  }
+
+  if (password !== password2) {
+    resultEl.className = "error";
+    resultEl.textContent = "As senhas não conferem.";
+    return;
+  }
+
+  resultEl.textContent = "Enviando...";
+
+  try {
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      resultEl.className = "error";
+      resultEl.textContent =
+        "Erro " + res.status + ":\n" + JSON.stringify(data, null, 2);
+      return;
+    }
+
+    resultEl.className = "success";
+    resultEl.textContent =
+      "Usuário criado com sucesso!\nAgora você já pode fazer login.";
+
+    // opcional: limpar campos
+    document.getElementById("password").value = "";
+    document.getElementById("password2").value = "";
+
+    // opcional: redirecionar depois de alguns segundos
+    setTimeout(() => {
+      window.location.href = "/login.html";
+    }, 2000);
+  } catch (err) {
+    resultEl.className = "error";
+    resultEl.textContent = "Erro de conexão: " + err.message;
+  }
+});
+</script>
+
+</body>
+</html>

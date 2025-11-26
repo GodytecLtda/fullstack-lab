@@ -21,11 +21,13 @@ const pool = new Pool({
 app.use(cors());
 app.use(express.json());
 
-// servir arquivos estáticos (login.html, index.html, etc.)
+// Servir frontend
 const publicPath = path.join(__dirname, "public");
 app.use(express.static(publicPath));
 
-/* ───────────────────────── API BÁSICA ───────────────────────── */
+/* ================================================================
+   ROTAS BÁSICAS
+================================================================ */
 
 app.get("/api/health", (req, res) => {
   res.json({
@@ -41,18 +43,41 @@ app.get("/api/message", (req, res) => {
   });
 });
 
-/* ───────────────────── AUTENTICAÇÃO REAL ───────────────────── */
-/*
-  Vamos usar:
-  - /api/login -> login com email + senha
-  - /api/me    -> retorna dados do usuário logado (via token)
-*/
+/* ================================================================
+   MIDDLEWARES DE AUTENTICAÇÃO
+================================================================ */
 
-// Login: o frontend manda { username, password }
-// Vamos tratar "username" como email, pra não quebrar login.js
+function requireAuth(req, res, next) {
+  const header = req.headers.authorization;
+  if (!header) {
+    return res.status(401).json({ error: "Token faltando." });
+  }
+
+  const token = header.split(" ")[1];
+
+  jwt.verify(token, SECRET, (err, payload) => {
+    if (err) {
+      return res.status(403).json({ error: "Token inválido." });
+    }
+    req.user = payload; // { id, name, email, role }
+    next();
+  });
+}
+
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({ error: "Acesso somente para admin." });
+  }
+  next();
+}
+
+/* ================================================================
+   LOGIN REAL (email + senha hash)
+================================================================ */
+
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
-  const email = username; // label pode ser "Usuário", mas o valor é o email
+  const email = username;
 
   if (!email || !password) {
     return res.status(400).json({ ok: false, error: "Email e senha são obrigatórios." });
@@ -60,7 +85,7 @@ app.post("/api/login", async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT id, name, email, password_hash, created_at
+      `SELECT id, name, email, password_hash, role, created_at
        FROM users
        WHERE email = $1`,
       [email]
@@ -82,6 +107,7 @@ app.post("/api/login", async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
       SECRET,
       { expiresIn: "2h" }
@@ -94,78 +120,89 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Middleware simples para rotas que exigem token (se quiser usar depois)
-function requireAuth(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: "Token faltando." });
-  }
+/* ================================================================
+   /api/me → dados do usuário logado (via token)
+================================================================ */
 
-  const token = authHeader.split(" ")[1];
-
-  jwt.verify(token, SECRET, (err, payload) => {
-    if (err) {
-      return res.status(403).json({ error: "Token inválido." });
-    }
-    req.user = payload;
-    next();
-  });
-}
-
-// /api/me -> retorna o usuário do token
 app.get("/api/me", requireAuth, (req, res) => {
-  res.json({ user: req.user });
+  return res.json({ user: req.user });
 });
 
-/* ─────────────────────── CRUD REAL DE USERS ─────────────────────── */
-/*
-  Tabela: users (id, name, email, password_hash, created_at)
 
-  - POST   /api/users        -> Create
-  - GET    /api/users        -> Read (todos)
-  - GET    /api/users/:id    -> Read (um)
-  - PUT    /api/users/:id    -> Update
-  - DELETE /api/users/:id    -> Delete
-*/
 
-// CREATE - cria usuário com senha
-app.post("/api/users", async (req, res) => {
+/* ================================================================
+   REGISTRO PÚBLICO /api/register  (sempre cria role = 'user')
+================================================================ */
+
+app.post("/api/register", async (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    return res
-      .status(400)
-      .json({ error: "Nome, e-mail e senha são obrigatórios." });
+    return res.status(400).json({
+      error: "Nome, e-mail e senha são obrigatórios.",
+    });
   }
 
   try {
-    const passwordHash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
-      `INSERT INTO users (name, email, password_hash)
-       VALUES ($1, $2, $3)
-       RETURNING id, name, email, created_at`,
-      [name, email, passwordHash]
+      `INSERT INTO users (name, email, password_hash, role)
+       VALUES ($1, $2, $3, 'user')
+       RETURNING id, name, email, role, created_at`,
+      [name, email, hash]
     );
 
     return res.status(201).json(result.rows[0]);
   } catch (err) {
-    console.error("Erro ao inserir usuário:", err);
+    console.error("Erro ao registrar usuário:", err);
     if (err.code === "23505") {
-      // unique_violation
-      return res
-        .status(409)
-        .json({ error: "E-mail já cadastrado." });
+      return res.status(409).json({ error: "E-mail já cadastrado." });
+    }
+    return res.status(500).json({ error: "Erro interno ao registrar usuário." });
+  }
+});
+
+
+/* ================================================================
+   CRUD REAL DE USUÁRIOS (APENAS ADMIN)
+================================================================ */
+
+// CREATE
+app.post("/api/users", requireAuth, requireAdmin, async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({
+      error: "Nome, e-mail e senha são obrigatórios.",
+    });
+  }
+
+  try {
+    const hash = await bcrypt.hash(password, 10);
+
+    const result = await pool.query(
+      `INSERT INTO users (name, email, password_hash, role)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, name, email, role, created_at`,
+      [name, email, hash, role || "user"]
+    );
+
+    return res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error("Erro ao criar usuário:", err);
+    if (err.code === "23505") {
+      return res.status(409).json({ error: "E-mail já cadastrado." });
     }
     return res.status(500).json({ error: "Erro interno ao criar usuário." });
   }
 });
 
-// READ (todos)
-app.get("/api/users", async (req, res) => {
+// READ ALL
+app.get("/api/users", requireAuth, requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, name, email, created_at
+      `SELECT id, name, email, role, created_at
        FROM users
        ORDER BY id ASC`
     );
@@ -176,13 +213,13 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-// READ (um)
-app.get("/api/users/:id", async (req, res) => {
+// READ ONE
+app.get("/api/users/:id", requireAuth, requireAdmin, async (req, res) => {
   const { id } = req.params;
 
   try {
     const result = await pool.query(
-      `SELECT id, name, email, created_at
+      `SELECT id, name, email, role, created_at
        FROM users
        WHERE id = $1`,
       [id]
@@ -194,36 +231,28 @@ app.get("/api/users/:id", async (req, res) => {
 
     return res.json(result.rows[0]);
   } catch (err) {
-    console.error("Erro ao buscar usuário:", err);
     return res.status(500).json({ error: "Erro interno ao buscar usuário." });
   }
 });
 
-// UPDATE (nome/email/senha)
-app.put("/api/users/:id", async (req, res) => {
+// UPDATE
+app.put("/api/users/:id", requireAuth, requireAdmin, async (req, res) => {
   const { id } = req.params;
-  const { name, email, password } = req.body;
-
-  if (!name && !email && !password) {
-    return res.status(400).json({
-      error: "Informe ao menos nome, e-mail ou senha para atualizar.",
-    });
-  }
+  const { name, email, password, role } = req.body;
 
   try {
-    let passwordHash = null;
-    if (password) {
-      passwordHash = await bcrypt.hash(password, 10);
-    }
+    let hash = null;
+    if (password) hash = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
       `UPDATE users
        SET name = COALESCE($1, name),
            email = COALESCE($2, email),
-           password_hash = COALESCE($3, password_hash)
-       WHERE id = $4
-       RETURNING id, name, email, created_at`,
-      [name || null, email || null, passwordHash, id]
+           password_hash = COALESCE($3, password_hash),
+           role = COALESCE($4, role)
+       WHERE id = $5
+       RETURNING id, name, email, role, created_at`,
+      [name || null, email || null, hash, role || null, id]
     );
 
     if (result.rows.length === 0) {
@@ -233,19 +262,19 @@ app.put("/api/users/:id", async (req, res) => {
     return res.json(result.rows[0]);
   } catch (err) {
     console.error("Erro ao atualizar usuário:", err);
-    if (err.code === "23505") {
-      return res.status(409).json({ error: "E-mail já cadastrado." });
-    }
     return res.status(500).json({ error: "Erro interno ao atualizar usuário." });
   }
 });
 
 // DELETE
-app.delete("/api/users/:id", async (req, res) => {
+app.delete("/api/users/:id", requireAuth, requireAdmin, async (req, res) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(`DELETE FROM users WHERE id = $1`, [id]);
+    const result = await pool.query(
+      `DELETE FROM users WHERE id = $1`,
+      [id]
+    );
 
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Usuário não encontrado." });
@@ -258,7 +287,9 @@ app.delete("/api/users/:id", async (req, res) => {
   }
 });
 
-/* ───────────────────────── START SERVER ───────────────────────── */
+/* ================================================================
+   INICIAR SERVIDOR
+================================================================ */
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`API rodando na porta ${PORT}`);
