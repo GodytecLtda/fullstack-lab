@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - Fullstack Lab do Adelmo 🚀</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+    header {
+      background: #020617;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1f2937;
+    }
+    header h1 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+    header span {
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+    main {
+      padding: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #111827;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      border: 1px solid #1f2933;
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+    .stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .stat-box {
+      flex: 1 1 180px;
+      background: #020617;
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid #1f2937;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .user-info-row {
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+    .user-info-label {
+      color: #9ca3af;
+    }
+    button {
+      background: #2563eb;
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      color: #f9fafb;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    button:hover {
+      filter: brightness(1.1);
+    }
+    .danger {
+      background: #dc2626;
+    }
+    .mt-2 {
+      margin-top: 8px;
+    }
+    .mt-4 {
+      margin-top: 16px;
+    }
+    pre {
+      background: #020617;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      border: 1px solid #1f2937;
+    }
+    a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Fullstack Lab do Adelmo 🚀</h1>
+    <span>Dashboard · área protegida</span>
+  </div>
+  <div>
+    <button id="logoutBtn" class="danger">Logout</button>
+  </div>
+</header>
+
+<main>
+  <section class="card" id="welcomeCard">
+    <h2>Bem-vindo, <span id="userName">...</span></h2>
+    <div class="user-info-row">
+      <span class="user-info-label">E-mail:</span>
+      <span id="userEmail"></span>
+    </div>
+    <div class="user-info-row">
+      <span class="user-info-label">ID:</span>
+      <span id="userId"></span>
+    </div>
+    <p class="mt-2">
+      <a href="/index.html">→ Gerenciamento de usuários</a>
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Estatísticas rápidas</h2>
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-label">Total de usuários</div>
+        <div class="stat-value" id="totalUsers">-</div>
+      </div>
+    </div>
+    <button id="refreshStatsBtn" class="mt-2">Atualizar estatísticas</button>
+  </section>
+
+  <section class="card">
+    <h2>Dados brutos da API</h2>
+    <pre id="meRaw">Carregando...</pre>
+  </section>
+</main>
+
+<script>
+(function() {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "/login.html";
+    return;
+  }
+
+  const userNameEl = document.getElementById("userName");
+  const userEmailEl = document.getElementById("userEmail");
+  const userIdEl = document.getElementById("userId");
+  const totalUsersEl = document.getElementById("totalUsers");
+  const meRawEl = document.getElementById("meRaw");
+
+  async function loadMe() {
+    const res = await fetch("/api/me", {
+      headers: { Authorization: "Bearer " + token },
+    });
+
+    const data = await res.json();
+    meRawEl.textContent = JSON.stringify(data, null, 2);
+
+    if (data.user) {
+      userNameEl.textContent = data.user.name;
+      userEmailEl.textContent = data.user.email;
+      userIdEl.textContent = data.user.id;
+    }
+  }
+
+  async function loadStats() {
+    const res = await fetch("/api/users");
+    const users = await res.json();
+    totalUsersEl.textContent = users.length;
+  }
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login.html";
+  });
+
+  document.getElementById("refreshStatsBtn").addEventListener("click", loadStats);
+
+  loadMe();
+  loadStats();
+})();
+</script>
+
+</body>
+</html>
