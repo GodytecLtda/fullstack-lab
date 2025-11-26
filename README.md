@@ -1,53 +1,71 @@
+
 # 🚀 Fullstack Lab
 
-![Arquitetura do Projeto](docs/img/architecture.png)  
+Um laboratório full-stack criado para estudar, construir e testar aplicações modernas reunindo backend, frontend, infraestrutura e automação.  
+O projeto serve como base sólida para desenvolvimento local com Docker ou para testes distribuídos usando K3s (Kubernetes leve).
 
-Um laboratório full-stack criado para estudar, construir e testar aplicações modernas reunindo backend, frontend, infraestrutura e automação. O projeto serve como base sólida para desenvolvimento local (Docker) ou distribuído (K3s + Kubernetes).
+O objetivo é criar um ambiente completo e reproduzível, permitindo explorar tecnologias, criar protótipos e simular cenários de desenvolvimento, stage e produção.
 
 ---
 
 ## 🏷️ Badges
 
-![Status](https://img.shields.io/badge/status-em_desenvolvimento-yellow)
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/kubernetes-K3s-326CE5?logo=kubernetes&logoColor=white)
-![GitHub](https://img.shields.io/badge/made_by-Adelmo_Godoy-black)
-![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Docker%20%7C%20K3s-lightgrey)
+![status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![license](https://img.shields.io/badge/license-MIT-blue)
+![docker](https://img.shields.io/badge/docker-ready-blue)
+![kubernetes](https://img.shields.io/badge/kubernetes-K3s-orange)
+![author](https://img.shields.io/badge/made%20by-Adelmo%20Godoy-purple)
+![platform](https://img.shields.io/badge/platform-Linux%20%7C%20Docker%20%7C%20K3s-lightgrey)
 
 ---
 
-## 📑 Tabela de Conteúdos
+## 📚 Tabela de Conteúdos
 
-- [Stack Atual](#-stack-atual)  
-- [Arquitetura](#-arquitetura)  
-- [Demonstração](#-demonstração)  
-- [Funcionalidades](#-funcionalidades)  
-- [Como Executar](#-como-executar)  
-- [Documentação](#-documentação)  
-- [Tecnologias Usadas](#-tecnologias-usadas)  
-- [Roadmap](#-roadmap)  
-- [Contribuindo](#-contribuindo)  
-- [Licença](#-licença)  
-- [Autor](#-autor)
-
----
-
-## 🧩 Stack Atual
-
-**Frontend:** HTML, CSS, JavaScript (futuro: Flutter ou Next.js)  
-**Backend:** FastAPI (futuro: Node/Deno)  
-**Banco de Dados:** PostgreSQL, Supabase ou SQLite  
-**Infraestrutura:** Docker, Docker Compose, K3s  
-**Rede:** Ingress NGINX + MetalLB  
-**DevOps:** GitHub, automações e CI/CD (futuro)  
+- [Visão Geral](#visão-geral)
+- [Arquitetura](#arquitetura)
+- [Stack Atual](#stack-atual)
+- [Funcionalidades](#funcionalidades)
+- [Demonstração](#demonstração)
+- [Instalação](#instalação)
+- [Como Executar](#como-executar)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Roadmap](#roadmap)
+- [Contribuindo](#contribuindo)
+- [Licença](#licença)
 
 ---
 
-## 🏗 Arquitetura
+## 🧠 Visão Geral
 
-A estrutura do projeto segue o fluxo:
+O Fullstack Lab funciona como um ambiente prático para experimentar tecnologias modernas — desde containers simples até clusters Kubernetes completos.
+
+É o espaço onde tudo pode quebrar, evoluir e ser reconstruído. Perfeito para testar:
+
+- aplicações frontend (HTML, JS, frameworks)
+- APIs backend
+- bancos de dados locais ou containerizados
+- pipelines, automações e ferramentas devops
+- deploy em cluster (K3s + MetalLB + Ingress)
+
+Tudo isso dentro de uma infraestrutura local totalmente controlada.
+
+---
+
+## 🏗️ Arquitetura
+
+A estrutura base segue uma topologia enxuta e poderosa:
 
 ```text
-frontend → backend → database → infra (docker/k8s)
-
+                  ┌───────────────────────────────┐
+                  │        Frontend (SPA)         │
+                  └──────────────┬────────────────┘
+                                 │
+                          Ingress NGINX
+                                 │
+        ┌────────────────────────┴────────────────────────┐
+        │                                                 │
+  Backend API                                        Painel / Tools
+        │                                                 │
+        └────────────────────────┬────────────────────────┘
+                                 │
+                       Banco de Dados (local ou Docker)
