@@ -71,6 +71,17 @@
     .user-info-label {
       color: #9ca3af;
     }
+    .badge {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      background: #f97316;
+      color: #02101f;
+      font-weight: 600;
+    }
     button {
       background: #2563eb;
       border: none;
@@ -124,7 +135,10 @@
 
 <main>
   <section class="card" id="welcomeCard">
-    <h2>Bem-vindo, <span id="userName">...</span></h2>
+    <h2>
+      Bem-vindo, <span id="userName">...</span>
+      <span id="roleBadge" class="badge" style="display:none;">ADMIN</span>
+    </h2>
     <div class="user-info-row">
       <span class="user-info-label">E-mail:</span>
       <span id="userEmail"></span>
@@ -133,8 +147,8 @@
       <span class="user-info-label">ID:</span>
       <span id="userId"></span>
     </div>
-    <p class="mt-2">
-      <a href="/index.html">→ Gerenciamento de usuários</a>
+    <p class="mt-2" id="manageLinkWrapper">
+      <a id="manageLink" href="/index.html">→ Gerenciamento de usuários (somente admin)</a>
     </p>
   </section>
 
@@ -169,26 +183,62 @@
   const userIdEl = document.getElementById("userId");
   const totalUsersEl = document.getElementById("totalUsers");
   const meRawEl = document.getElementById("meRaw");
+  const roleBadgeEl = document.getElementById("roleBadge");
+  const manageLinkWrapper = document.getElementById("manageLinkWrapper");
 
   async function loadMe() {
-    const res = await fetch("/api/me", {
-      headers: { Authorization: "Bearer " + token },
-    });
+    try {
+      const res = await fetch("/api/me", {
+        headers: { Authorization: "Bearer " + token },
+      });
 
-    const data = await res.json();
-    meRawEl.textContent = JSON.stringify(data, null, 2);
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem("token");
+        window.location.href = "/login.html";
+        return;
+      }
 
-    if (data.user) {
-      userNameEl.textContent = data.user.name;
-      userEmailEl.textContent = data.user.email;
-      userIdEl.textContent = data.user.id;
+      const data = await res.json();
+      meRawEl.textContent = JSON.stringify(data, null, 2);
+
+      if (data && data.user) {
+        const u = data.user;
+        userNameEl.textContent = u.name || "Usuário";
+        userEmailEl.textContent = u.email || "-";
+        userIdEl.textContent = u.id || "-";
+
+        // Se for admin, mostra badge e link de gerenciamento
+        if (u.role === "admin") {
+          roleBadgeEl.style.display = "inline-block";
+          manageLinkWrapper.style.display = "block";
+        } else {
+          // usuário comum → esconde o link de gerenciamento
+          manageLinkWrapper.style.display = "none";
+        }
+      }
+    } catch (err) {
+      meRawEl.textContent = "Erro ao carregar /api/me: " + err.message;
     }
   }
 
   async function loadStats() {
-    const res = await fetch("/api/users");
-    const users = await res.json();
-    totalUsersEl.textContent = users.length;
+    try {
+      const res = await fetch("/api/users", {
+        headers: { Authorization: "Bearer " + token },
+      });
+      if (!res.ok) {
+        totalUsersEl.textContent = "?";
+        return;
+      }
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        totalUsersEl.textContent = data.length;
+      } else {
+        totalUsersEl.textContent = "?";
+      }
+    } catch (err) {
+      totalUsersEl.textContent = "?";
+    }
   }
 
   document.getElementById("logoutBtn").addEventListener("click", () => {
