@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # 🚀Bem vindo(a) ao Fullstack Lab 
 
 Um laboratório full-stack criado para estudar, construir e testar aplicações modernas reunindo backend, frontend, infraestrutura e automação. O projeto serve como base sólida para desenvolvimento local com Docker ou para testes distribuídos usando K3s (Kubernetes leve).
