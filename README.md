@@ -1,5 +1,5 @@
 
-# 🚀 Fullstack Lab
+# 🚀Bem vindo(a) ao Fullstack Lab 
 
 Um laboratório full-stack criado para estudar, construir e testar aplicações modernas reunindo backend, frontend, infraestrutura e automação.  
 O projeto serve como base sólida para desenvolvimento local com Docker ou para testes distribuídos usando K3s (Kubernetes leve).
@@ -18,7 +18,6 @@ O objetivo é criar um ambiente completo e reproduzível, permitindo explorar te
 ![platform](https://img.shields.io/badge/platform-Linux%20%7C%20Docker%20%7C%20K3s-lightgrey)
 
 ---
-
 ## 📚 Tabela de Conteúdos
 
 - [Visão Geral](#visão-geral)
