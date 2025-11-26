@@ -19,13 +19,13 @@
       white-space: pre-wrap;
     }
     button {
-      padding: 8px 16px;
+      padding: 6px 12px;
       border: none;
       background: #2563eb;
       color: white;
       cursor: pointer;
       border-radius: 6px;
-      margin-top: 10px;
+      margin-top: 6px;
     }
     button:hover {
       background: #1d4ed8;
@@ -43,6 +43,25 @@
     }
     hr {
       margin: 40px 0;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background: #f5f5f5;
+      text-align: left;
+    }
+    .actions button {
+      margin-right: 6px;
+    }
+    .small-input {
+      width: 120px;
     }
   </style>
 </head>
@@ -92,14 +111,47 @@
 <hr>
 
 <!-- -------------------------------------------------------------
-     LISTA DE USUÁRIOS
+     LISTA + AÇÕES (EDITAR / EXCLUIR)
 -------------------------------------------------------------- -->
-<h3>Lista de usuários</h3>
+<h2>Gerenciar usuários</h2>
 
 <button id="btnLoadUsers">Carregar /api/users</button>
-<pre id="userslist"></pre>
+<div id="usersTable"></div>
 
 <hr>
+
+<!-- -------------------------------------------------------------
+     FORMULÁRIO DE ATUALIZAÇÃO
+-------------------------------------------------------------- -->
+<h3>Atualizar usuário</h3>
+
+<p>Selecione um usuário na tabela (botão "Editar") ou informe o ID manualmente.</p>
+
+<form id="updateForm">
+  <label>
+    ID:
+    <input type="number" id="updateIdInput" class="small-input" required />
+  </label>
+
+  <label>
+    Novo nome (opcional):
+    <input type="text" id="updateNameInput" />
+  </label>
+
+  <label>
+    Novo e-mail (opcional):
+    <input type="email" id="updateEmailInput" />
+  </label>
+
+  <label>
+    Nova senha (opcional):
+    <input type="password" id="updatePasswordInput" />
+  </label>
+
+  <button type="submit">Atualizar usuário</button>
+</form>
+
+<pre id="updateResult"></pre>
 
 <!-- -------------------------------------------------------------
      JAVASCRIPT
@@ -148,15 +200,187 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
 
     const data = await res.json();
     out.textContent = JSON.stringify(data, null, 2);
+
+    // recarrega lista depois de cadastrar
+    await loadUsers();
   } catch (err) {
     out.textContent = "Erro: " + err.message;
   }
 });
 
-// Carregar lista de usuários
-document
-  .getElementById("btnLoadUsers")
-  .addEventListener("click", () => callApi("/api/users", "userslist"));
+// ------- LISTAR USUÁRIOS E RENDERIZAR TABELA -------
+
+async function loadUsers() {
+  const container = document.getElementById("usersTable");
+  container.innerHTML = "Carregando usuários...";
+
+  try {
+    const res = await fetch("/api/users");
+    const users = await res.json();
+
+    if (!Array.isArray(users)) {
+      container.innerHTML = "<p>Resposta inesperada da API.</p>";
+      console.error("Resposta inesperada:", users);
+      return;
+    }
+
+    if (users.length === 0) {
+      container.innerHTML = "<p>Nenhum usuário cadastrado ainda.</p>";
+      return;
+    }
+
+    let html = `
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Criado em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    for (const u of users) {
+      html += `
+        <tr>
+          <td>${u.id}</td>
+          <td>${u.name}</td>
+          <td>${u.email}</td>
+          <td>${u.created_at || ""}</td>
+          <td class="actions">
+            <button class="edit-btn"
+              data-id="${u.id}"
+              data-name="${u.name}"
+              data-email="${u.email}">
+              Editar
+            </button>
+            <button class="delete-btn" data-id="${u.id}">
+              Excluir
+            </button>
+          </td>
+        </tr>
+      `;
+    }
+
+    html += `
+        </tbody>
+      </table>
+    `;
+
+    container.innerHTML = html;
+
+    // ligar eventos dos botões
+    attachRowHandlers();
+  } catch (err) {
+    container.innerHTML = "<p>Erro ao carregar usuários.</p>";
+    console.error(err);
+  }
+}
+
+function attachRowHandlers() {
+  const editButtons = document.querySelectorAll(".edit-btn");
+  const deleteButtons = document.querySelectorAll(".delete-btn");
+
+  const idInput = document.getElementById("updateIdInput");
+  const nameInput = document.getElementById("updateNameInput");
+  const emailInput = document.getElementById("updateEmailInput");
+
+  editButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const name = btn.dataset.name;
+      const email = btn.dataset.email;
+
+      idInput.value = id;
+      nameInput.value = name;
+      emailInput.value = email;
+
+      // opcional: rolar até o formulário de update
+      document.getElementById("updateForm").scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  deleteButtons.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.id;
+      const confirmDelete = confirm(`Tem certeza que deseja excluir o usuário ID ${id}?`);
+      if (!confirmDelete) return;
+
+      try {
+        const res = await fetch(`/api/users/${id}`, {
+          method: "DELETE",
+        });
+
+        if (!res.ok && res.status !== 204) {
+          const text = await res.text();
+          alert(`Erro ao excluir usuário: ${res.status} - ${text}`);
+          return;
+        }
+
+        await loadUsers();
+      } catch (err) {
+        alert("Erro de rede ao excluir usuário: " + err.message);
+      }
+    });
+  });
+}
+
+document.getElementById("btnLoadUsers").addEventListener("click", loadUsers);
+
+// ------- ATUALIZAR USUÁRIO (PUT /api/users/:id) -------
+
+document.getElementById("updateForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const id = document.getElementById("updateIdInput").value.trim();
+  const name = document.getElementById("updateNameInput").value.trim();
+  const email = document.getElementById("updateEmailInput").value.trim();
+  const password = document.getElementById("updatePasswordInput").value.trim();
+  const out = document.getElementById("updateResult");
+
+  if (!id) {
+    out.textContent = "Informe o ID do usuário.";
+    return;
+  }
+
+  const payload = {};
+  if (name) payload.name = name;
+  if (email) payload.email = email;
+  if (password) payload.password = password;
+
+  if (Object.keys(payload).length === 0) {
+    out.textContent = "Nada para atualizar. Informe ao menos um campo.";
+    return;
+  }
+
+  out.textContent = "Atualizando...";
+
+  try {
+    const res = await fetch(`/api/users/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      out.textContent = `Erro ${res.status}: ` + JSON.stringify(data);
+      return;
+    }
+
+    out.textContent = JSON.stringify(data, null, 2);
+
+    // limpa só o campo de senha, pra segurança
+    document.getElementById("updatePasswordInput").value = "";
+
+    await loadUsers();
+  } catch (err) {
+    out.textContent = "Erro: " + err.message;
+  }
+});
 </script>
 
 </body>

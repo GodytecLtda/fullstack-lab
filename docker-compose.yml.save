@@ -33,8 +33,8 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - /home/adelmo/fullstack-lab/frontend/public:/usr/share/nginx/html:ro
-      - /home/adelmo/fullstack-lab/frontend/nginx.conf:/etc/nginx/nginx.conf:ro
+      
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - app_net
 
