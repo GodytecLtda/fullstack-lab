@@ -1,80 +1,53 @@
-🚀 Fullstack Lab
+# 🚀 Fullstack Lab
 
-Um laboratório full-stack criado para estudar, construir e testar aplicações modernas reunindo backend, frontend, infraestrutura e automação. Este projeto serve como base sólida para desenvolver sistemas completos em ambiente local, Docker ou Kubernetes.
+![Arquitetura do Projeto](docs/img/architecture.png)  
 
-O objetivo é oferecer um ambiente prático e realista de aprendizado contínuo, explorando tecnologias atuais de desenvolvimento, DevOps, redes e deploy — tudo dentro de um único ecossistema evolutivo.
+Um laboratório full-stack criado para estudar, construir e testar aplicações modernas reunindo backend, frontend, infraestrutura e automação. O projeto serve como base sólida para desenvolvimento local (Docker) ou distribuído (K3s + Kubernetes).
 
-🧩 Stack Atual
+---
 
-Frontend: HTML, CSS, JavaScript (futuro suporte a Flutter ou Next.js)
-Backend: Python + FastAPI (Node/Deno planejados para versões futuras)
-Banco de Dados: PostgreSQL, Supabase ou SQLite
-Infraestrutura: Docker, Docker Compose, K3s
-Rede: Ingress NGINX + MetalLB
-DevOps: GitHub, automações e futura integração com CI/CD
+## 🏷️ Badges
 
-🏗 Arquitetura
+![Status](https://img.shields.io/badge/status-em_desenvolvimento-yellow)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/kubernetes-K3s-326CE5?logo=kubernetes&logoColor=white)
+![GitHub](https://img.shields.io/badge/made_by-Adelmo_Godoy-black)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Docker%20%7C%20K3s-lightgrey)
 
-A arquitetura segue a divisão clássica:
+---
 
-frontend → backend → database → infra/docker/k8s
+## 📑 Tabela de Conteúdos
 
-Toda a documentação organizada, incluindo diagramas e anotações, está na pasta /docs.
+- [Stack Atual](#-stack-atual)  
+- [Arquitetura](#-arquitetura)  
+- [Demonstração](#-demonstração)  
+- [Funcionalidades](#-funcionalidades)  
+- [Como Executar](#-como-executar)  
+- [Documentação](#-documentação)  
+- [Tecnologias Usadas](#-tecnologias-usadas)  
+- [Roadmap](#-roadmap)  
+- [Contribuindo](#-contribuindo)  
+- [Licença](#-licença)  
+- [Autor](#-autor)
 
-🛠 Funcionalidades em Desenvolvimento
+---
 
-⚙️ Estrutura inicial de frontend e backend
+## 🧩 Stack Atual
 
-🐳 Ambiente Docker para desenvolvimento local
+**Frontend:** HTML, CSS, JavaScript (futuro: Flutter ou Next.js)  
+**Backend:** FastAPI (futuro: Node/Deno)  
+**Banco de Dados:** PostgreSQL, Supabase ou SQLite  
+**Infraestrutura:** Docker, Docker Compose, K3s  
+**Rede:** Ingress NGINX + MetalLB  
+**DevOps:** GitHub, automações e CI/CD (futuro)  
 
-☸️ Deploy em cluster usando K3s
+---
 
-📜 Scripts de automação e setup rápido
+## 🏗 Arquitetura
 
-🔌 Modelos de API e rotas base
+A estrutura do projeto segue o fluxo:
 
-❤️‍🩹 Página de testes e health checks
+```text
+frontend → backend → database → infra (docker/k8s)
 
-▶️ Como Executar
-💻 Modo Local
-cd infra
-docker-compose up --build
-
-☸️ Modo Cluster (K3s)
-kubectl apply -f infra/k8s/
-
-📚 Documentação
-
-A pasta /docs contém:
-
-🧱 Arquitetura
-
-🗺️ Roadmap
-
-📝 Notas de estudo
-
-🖼️ Prints do laboratório
-
-🧭 Diagramas técnicos
-
-🛣️ Roadmap
-
-🖥️ Criar interface web básica
-
-🔧 Criar API funcional
-
-🗄️ Configurar banco e migrations
-
-🔐 Adicionar autenticação
-
-🤖 Criar automações
-
-☸️ Deploy no cluster K3s
-
-🔁 Pipeline CI/CD
-
-🌐 Criar versão demo online
-
-👤 Autor
-
-Desenvolvido por Adelmo Godoy, entusiasta de infraestrutura, aplicações e automação — sempre criando ambientes experimentais que evoluem para projetos reais.
