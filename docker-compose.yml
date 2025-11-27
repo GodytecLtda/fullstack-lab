@@ -1,46 +1,16 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:16
     container_name: fs_db
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: appdb
-      POSTGRES_USER: appuser
-      POSTGRES_PASSWORD: appsecret
+      POSTGRES_USER: fs_user
+      POSTGRES_PASSWORD: fs_password
+      POSTGRES_DB: fs_db
+    ports:
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-    networks:
-      - app_net
-
-  api:
-    build: ./backend
-    container_name: fs_api
-    env_file:
-      - ./backend/.env
-    depends_on:
-      - db
-    ports:
-      - "3000:3000"
-    networks:
-      - app_net
-
-  frontend:
-    image: nginx:alpine
-    container_name: fs_frontend
-    depends_on:
-      - api
-    ports:
-      - "8080:80"
-    volumes:
-      - /home/adelmo/fullstack-lab/frontend/public:/usr/share/nginx/html:ro
-      - /home/adelmo/fullstack-lab/frontend/nginx.conf:/etc/nginx/nginx.conf:ro
-    networks:
-      - app_net
 
 volumes:
   db_data:
-
-networks:
-  app_net:
-    driver: bridge

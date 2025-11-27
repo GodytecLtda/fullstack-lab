@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Meu Perfil - Fullstack Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: #020617;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border: 1px solid #1f2937;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+    }
+
+    .header {
+      grid-column: 1 / -1;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .btn-link {
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      color: #e5e7eb;
+      background: #020617;
+      cursor: pointer;
+    }
+
+    .btn-link:hover {
+      background: #111827;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      padding: 16px;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #9ca3af;
+      margin-bottom: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: #d1d5db;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.9rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px #22c55e40;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .btn-danger {
+      background: #7f1d1d;
+      color: #fecaca;
+    }
+
+    .btn-danger:hover {
+      background: #991b1b;
+    }
+
+    .danger-text {
+      font-size: 0.85rem;
+      color: #fca5a5;
+      margin-top: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #022c22;
+      border: 1px solid #16a34a;
+      font-size: 0.8rem;
+      color: #bbf7d0;
+      margin-bottom: 8px;
+    }
+
+    .token-box {
+      max-height: 200px;
+      overflow: auto;
+      background: #020617;
+      border-radius: 8px;
+      border: 1px solid #1f2937;
+      padding: 8px;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.75rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    .status.success {
+      color: #4ade80;
+    }
+
+    .status.error {
+      color: #f87171;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        border-radius: 0;
+        min-height: 100vh;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div>
+        <div class="title">Meu Perfil</div>
+        <p class="subtitle">
+          Gerencie seus dados da conta do laboratório fullstack.
+        </p>
+      </div>
+      <div>
+        <a href="/dashboard.html" class="btn-link">⬅ Voltar para o Dashboard</a>
+        <button id="logoutBtn" class="btn-link">Sair</button>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Dados de Perfil</h2>
+      <p>Atualize nome e email usados no sistema.</p>
+
+      <form id="profileForm">
+        <div class="form-group">
+          <label for="name">Nome</label>
+          <input type="text" id="name" autocomplete="name" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" autocomplete="email" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          💾 Salvar alterações
+        </button>
+
+        <div id="profileStatus" class="status"></div>
+      </form>
+
+      <hr style="border: none; border-top: 1px solid #1f2937; margin: 16px 0;" />
+
+      <h2>Trocar senha</h2>
+      <p>Use sua senha atual para definir uma nova.</p>
+
+      <form id="passwordForm">
+        <div class="form-group">
+          <label for="currentPassword">Senha atual</label>
+          <input type="password" id="currentPassword" autocomplete="current-password" />
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">Nova senha</label>
+          <input type="password" id="newPassword" autocomplete="new-password" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          🔑 Atualizar senha
+        </button>
+
+        <div id="passwordStatus" class="status"></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Dados do Token</h2>
+      <p>Visualize o conteúdo do JWT armazenado no navegador.</p>
+
+      <div class="badge">
+        🔍 Inspecting JWT
+      </div>
+
+      <div id="tokenInfo" class="token-box">
+        Nenhum token encontrado.
+      </div>
+
+      <h2 style="margin-top: 16px;">Zona de perigo</h2>
+      <p class="danger-text">
+        Excluir sua conta é permanente.  
+        Isso remove seu usuário deste laboratório.
+      </p>
+
+      <button id="deleteAccountBtn" class="btn btn-danger">
+        🗑 Excluir minha conta
+      </button>
+
+      <div id="deleteStatus" class="status"></div>
+    </section>
+  </div>
+
+  <script src="/profile.js"></script>
+</body>
+</html>
