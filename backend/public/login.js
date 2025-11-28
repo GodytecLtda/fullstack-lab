@@ -1,62 +1,58 @@
-// login.js — versão simples e correta
+const resultEl = document.getElementById("result");
+const loginBtn = document.getElementById("login-btn");
 
-// A API está no mesmo host e porta que servem o HTML (3000)
-const API_BASE = window.location.origin; 
-// ex: http://192.168.0.3:3000
+const API_LOGIN_URL = "/api/login";
 
-async function handleLogin(event) {
-  event.preventDefault(); // não deixa o form recarregar a página
+loginBtn.addEventListener("click", async () => {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const errorDiv = document.getElementById('error-message');
-
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-
-  errorDiv.textContent = '';
-
-  if (!email || !password) {
-    errorDiv.textContent = 'Preencha email e senha.';
+  if (!username || !password) {
+    resultEl.textContent = "Preencha usuário (e-mail) e senha.";
     return;
   }
 
+  resultEl.textContent = "Verificando...";
+
   try {
-    const res = await fetch(`${API_BASE}/api/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
+    const response = await fetch(API_LOGIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
     });
 
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      // Mostra a mensagem que veio da API se existir
-      const msg = data.error || data.message || `Servidor respondeu ${res.status}`;
-      throw new Error(msg);
+    if (!response.ok) {
+      const text = await response.text().catch(() => "");
+      console.error("Resposta não OK:", response.status, text);
+      resultEl.textContent = `Erro: servidor respondeu ${response.status}`;
+      return;
     }
 
-    // Salva token e usuário
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-    }
-    if (data.user) {
-      localStorage.setItem('user', JSON.stringify(data.user));
+    let data;
+    try {
+      data = await response.json();
+    } catch (err) {
+      console.error("Erro ao fazer parse do JSON:", err);
+      resultEl.textContent = "Erro ao interpretar resposta do servidor.";
+      return;
     }
 
-    // Redireciona para o dashboard
-    window.location.href = '/dashboard.html';
+    if (!data.ok) {
+      resultEl.textContent = "Erro: " + (data.error || "credenciais inválidas.");
+      return;
+    }
+
+    // salva token
+    localStorage.setItem("token", data.token);
+
+    resultEl.textContent = "Login bem-sucedido! Redirecionando...";
+
+    setTimeout(() => {
+      window.location.href = "/dashboard.html";
+    }, 800);
+
   } catch (err) {
-    console.error('Erro no login:', err);
-    errorDiv.textContent = 'Erro: ' + err.message;
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('login-form');
-  if (form) {
-    form.addEventListener('submit', handleLogin);
+    console.error("Erro de rede no fetch:", err);
+    resultEl.textContent = "Erro de conexão com o servidor.";
   }
 });
