@@ -2,256 +2,594 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard - Fullstack Lab do Adelmo 🚀</title>
+  <title>Dashboard - Godytec Fullstack Lab 🚀</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
-      background: #0f172a;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
       color: #e5e7eb;
     }
-    header {
+
+    .shell {
+      width: 100%;
+      max-width: 1100px;
       background: #020617;
-      padding: 16px 24px;
+      border-radius: 18px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65);
+      padding: 22px 22px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-link {
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      color: #e5e7eb;
+      background: #020617;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-link:hover {
+      background: #111827;
+    }
+
+    .btn-logout {
+      background: #7f1d1d;
+      border-color: #b91c1c;
+      color: #fee2e2;
+    }
+
+    .btn-logout:hover {
+      background: #991b1b;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 1.7fr 1.3fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #1f2937;
+      padding: 16px 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.86rem;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .welcome-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      border: 1px solid #f97316;
+      background: #451a03;
+      color: #fed7aa;
+      margin-top: 4px;
+    }
+
+    .status-card {
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #1f2937;
+      padding: 14px 16px 16px;
+      margin-bottom: 10px;
+    }
+
+    .status-card h2 {
+      font-size: 0.98rem;
+      margin-bottom: 6px;
+    }
+
+    .status-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #1f2937;
+      margin: 6px 0;
+      font-size: 0.86rem;
     }
-    header h1 {
-      font-size: 1.4rem;
-      margin: 0;
+
+    .status-indicator {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      transition: all 0.25s ease;
     }
-    header span {
-      font-size: 0.9rem;
-      color: #9ca3af;
+
+    .status-indicator.green { background: #22c55e; box-shadow: 0 0 8px #22c55e80; }
+    .status-indicator.red   { background: #ef4444; box-shadow: 0 0 8px #ef444480; }
+    .status-indicator.yellow{ background: #facc15; box-shadow: 0 0 8px #facc1580; }
+    .status-indicator.gray  { background: #4b5563; }
+
+    .latency-text {
+      font-size: 0.86rem;
+      color: #94a3b8;
     }
-    main {
-      padding: 24px;
-      max-width: 900px;
-      margin: 0 auto;
+
+    .btn-refresh {
+      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: none;
+      background: #1d4ed8;
+      color: #e5e7eb;
+      font-size: 0.8rem;
+      cursor: pointer;
     }
-    .card {
+
+    .btn-refresh:hover {
+      background: #2563eb;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #e5e7eb;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background: #1f2937;
+      color: #e5e7eb;
+      border: 1px solid #374151;
+    }
+
+    .btn-secondary:hover {
       background: #111827;
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 16px;
-      border: 1px solid #1f2933;
     }
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.2rem;
+
+    .info-line {
+      font-size: 0.86rem;
+      margin-bottom: 4px;
     }
-    .stats {
+
+    .info-label {
+      color: #9ca3af;
+      font-size: 0.8rem;
+    }
+
+    .info-value {
+      color: #e5e7eb;
+      word-break: break-all;
+    }
+
+    .quick-actions {
       display: flex;
-      gap: 16px;
       flex-wrap: wrap;
-      margin-top: 8px;
+      gap: 8px;
+      margin-top: 10px;
     }
-    .stat-box {
-      flex: 1 1 180px;
+
+    .token-box {
+      max-height: 260px;
+      overflow: auto;
       background: #020617;
       border-radius: 10px;
-      padding: 12px 14px;
       border: 1px solid #1f2937;
-    }
-    .stat-label {
-      font-size: 0.8rem;
-      color: #9ca3af;
-    }
-    .stat-value {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-    .user-info-row {
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-    }
-    .user-info-label {
-      color: #9ca3af;
-    }
-    .badge {
-      display: inline-block;
-      margin-left: 8px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      background: #f97316;
-      color: #02101f;
-      font-weight: 600;
-    }
-    button {
-      background: #2563eb;
-      border: none;
-      border-radius: 999px;
-      padding: 8px 16px;
-      color: #f9fafb;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    button:hover {
-      filter: brightness(1.1);
-    }
-    .danger {
-      background: #dc2626;
-    }
-    .mt-2 {
-      margin-top: 8px;
-    }
-    .mt-4 {
-      margin-top: 16px;
-    }
-    pre {
-      background: #020617;
       padding: 8px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      overflow-x: auto;
-      border: 1px solid #1f2937;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.75rem;
+      white-space: pre-wrap;
+      word-break: break-all;
     }
-    a {
-      color: #60a5fa;
-      text-decoration: none;
+
+    .status-text {
+      margin-top: 6px;
+      font-size: 0.84rem;
+      color: #9ca3af;
     }
-    a:hover {
-      text-decoration: underline;
+
+    footer {
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 880px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        border-radius: 0;
+        min-height: 100vh;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .header-actions {
+        align-self: flex-end;
+      }
     }
   </style>
 </head>
 <body>
-
-<header>
-  <div>
-    <h1>Fullstack Lab do Adelmo 🚀</h1>
-    <span>Dashboard · área protegida</span>
-  </div>
-  <div>
-    <button id="logoutBtn" class="danger">Logout</button>
-  </div>
-</header>
-
-<main>
-  <section class="card" id="welcomeCard">
-    <h2>
-      Bem-vindo, <span id="userName">...</span>
-      <span id="roleBadge" class="badge" style="display:none;">ADMIN</span>
-    </h2>
-    <div class="user-info-row">
-      <span class="user-info-label">E-mail:</span>
-      <span id="userEmail"></span>
-    </div>
-    <div class="user-info-row">
-      <span class="user-info-label">ID:</span>
-      <span id="userId"></span>
-    </div>
-    <p class="mt-2" id="manageLinkWrapper">
-      <a id="manageLink" href="/index.html">→ Gerenciamento de usuários (somente admin)</a>
-    </p>
-  </section>
-
-  <section class="card">
-    <h2>Estatísticas rápidas</h2>
-    <div class="stats">
-      <div class="stat-box">
-        <div class="stat-label">Total de usuários</div>
-        <div class="stat-value" id="totalUsers">-</div>
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <div class="brand-title">Godytec Fullstack Lab 🚀</div>
+        <div class="brand-subtitle">Dashboard · área protegida</div>
       </div>
-    </div>
-    <button id="refreshStatsBtn" class="mt-2">Atualizar estatísticas</button>
-  </section>
 
-  <section class="card">
-    <h2>Dados brutos da API</h2>
-    <pre id="meRaw">Carregando...</pre>
-  </section>
-</main>
+      <div class="header-actions">
+        <a href="/index.html" class="btn-link">👥 Gerenciar usuários</a>
+        <button id="logoutBtn" class="btn-link btn-logout">Logout</button>
+      </div>
+    </header>
 
-<script>
-(function() {
-  const token = localStorage.getItem("token");
+    <main>
+      <section>
+        <!-- STATUS VISUAL -->
+        <div class="status-card">
+          <h2>Status do sistema</h2>
+          <p style="font-size:0.8rem; color:#9ca3af; margin-bottom:4px;">
+            Snapshot rápido da saúde da API e do banco.
+          </p>
 
-  if (!token) {
-    window.location.href = "/login.html";
-    return;
-  }
+          <div class="status-row">
+            <span>Servidor</span>
+            <div id="status-server" class="status-indicator gray"></div>
+          </div>
 
-  const userNameEl = document.getElementById("userName");
-  const userEmailEl = document.getElementById("userEmail");
-  const userIdEl = document.getElementById("userId");
-  const totalUsersEl = document.getElementById("totalUsers");
-  const meRawEl = document.getElementById("meRaw");
-  const roleBadgeEl = document.getElementById("roleBadge");
-  const manageLinkWrapper = document.getElementById("manageLinkWrapper");
+          <div class="status-row">
+            <span>Banco de dados</span>
+            <div id="status-db" class="status-indicator gray"></div>
+          </div>
 
-  async function loadMe() {
-    try {
-      const res = await fetch("/api/me", {
-        headers: { Authorization: "Bearer " + token },
-      });
+          <div class="status-row">
+            <span>Latência</span>
+            <span id="latency-label" class="latency-text">-- ms</span>
+          </div>
 
-      if (res.status === 401 || res.status === 403) {
-        localStorage.removeItem("token");
-        window.location.href = "/login.html";
-        return;
+          <button id="btn-refresh-status" class="btn-refresh">Atualizar status</button>
+        </div>
+
+        <!-- BEM-VINDO -->
+        <div class="card">
+          <h2>Bem-vindo, <span id="welcomeNameSpan">Admin</span></h2>
+          <p>Resumo da sua sessão atual no laboratório.</p>
+
+          <div class="info-line">
+            <span class="info-label">E-mail: </span>
+            <span class="info-value" id="infoEmail">-</span>
+          </div>
+          <div class="info-line">
+            <span class="info-label">ID: </span>
+            <span class="info-value" id="infoId">-</span>
+          </div>
+
+          <div style="margin-top:6px;">
+            <span class="info-label">Papel: </span>
+            <span class="role-badge" id="roleBadge">ADMIN</span>
+          </div>
+
+          <div class="quick-actions">
+            <button class="btn btn-primary" id="btnGoProfile">
+              👤 Meu Perfil
+            </button>
+            <button class="btn btn-secondary" id="btnGoAdmin">
+              🧩 Gerenciamento de usuários (somente admin)
+            </button>
+          </div>
+        </div>
+
+        <!-- ESTATÍSTICAS -->
+        <div class="card">
+          <h2>Estatísticas rápidas</h2>
+          <p>Visão simples baseada na API de usuários.</p>
+
+          <div class="info-line">
+            <span class="info-label">Total de usuários:</span>
+            <span class="info-value" id="totalUsers">-</span>
+          </div>
+
+          <button id="btnRefreshUsers" class="btn btn-primary" style="margin-top:8px;">
+            Atualizar estatísticas
+          </button>
+
+          <div id="statsStatus" class="status-text"></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="card">
+          <h2>Dados brutos da API</h2>
+          <p>Resposta direta de <code>/api/me</code> ou do token.</p>
+
+          <div class="token-box" id="tokenBox">
+            Carregando dados...
+          </div>
+
+          <div class="status-text" id="tokenStatus">
+            Lendo informações da sessão...
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Ambiente: <strong>Lab Local</strong> (Node + Postgres)</span>
+      <span id="footerUser">Usuário autenticado: -</span>
+    </footer>
+  </div>
+
+  <script>
+    function getToken() {
+      return localStorage.getItem('token');
+    }
+
+    function ensureAuthenticated() {
+      const token = getToken();
+      if (!token) {
+        window.location.href = '/login.html';
+      }
+    }
+
+    async function apiRequest(path, options = {}) {
+      const token = getToken();
+      const headers = options.headers || {};
+      headers['Content-Type'] = 'application/json';
+      if (token) {
+        headers['Authorization'] = 'Bearer ' + token;
       }
 
-      const data = await res.json();
-      meRawEl.textContent = JSON.stringify(data, null, 2);
+      const res = await fetch(path, { ...options, headers });
+      const contentType = res.headers.get('content-type') || '';
+      const data = contentType.includes('application/json')
+        ? await res.json().catch(() => ({}))
+        : await res.text().catch(() => '');
 
-      if (data && data.user) {
-        const u = data.user;
-        userNameEl.textContent = u.name || "Usuário";
-        userEmailEl.textContent = u.email || "-";
-        userIdEl.textContent = u.id || "-";
+      if (!res.ok) {
+        const message = data?.error || data?.message || 'Erro ao comunicar com o servidor';
+        throw new Error(message);
+      }
+      return data;
+    }
 
-        // Se for admin, mostra badge e link de gerenciamento
-        if (u.role === "admin") {
-          roleBadgeEl.style.display = "inline-block";
-          manageLinkWrapper.style.display = "block";
-        } else {
-          // usuário comum → esconde o link de gerenciamento
-          manageLinkWrapper.style.display = "none";
+    function renderTokenBox(dataFromMe) {
+      const tokenBox = document.getElementById('tokenBox');
+      const tokenStatus = document.getElementById('tokenStatus');
+
+      const token = getToken();
+      const result = { token: null, me: dataFromMe || null };
+
+      if (token) {
+        try {
+          const payloadBase64 = token.split('.')[1];
+          const payloadJson = atob(payloadBase64);
+          result.token = JSON.parse(payloadJson);
+        } catch (err) {
+          result.token = 'Falha ao decodificar token';
         }
       }
-    } catch (err) {
-      meRawEl.textContent = "Erro ao carregar /api/me: " + err.message;
-    }
-  }
 
-  async function loadStats() {
-    try {
-      const res = await fetch("/api/users", {
-        headers: { Authorization: "Bearer " + token },
+      tokenBox.textContent = JSON.stringify(result, null, 2);
+      tokenStatus.textContent = 'Dados carregados a partir do token e /api/me.';
+    }
+
+    async function loadUserInfo() {
+      const welcomeNameSpan = document.getElementById('welcomeNameSpan');
+      const infoEmail = document.getElementById('infoEmail');
+      const infoId = document.getElementById('infoId');
+      const roleBadge = document.getElementById('roleBadge');
+      const footerUser = document.getElementById('footerUser');
+      const btnGoAdmin = document.getElementById('btnGoAdmin');
+
+      try {
+        const data = await apiRequest('/api/me', { method: 'GET' });
+        const user = data.user || data;
+
+        const name = user.name || 'Usuário';
+        const email = user.email || '-';
+        const role = user.role || 'user';
+        const id = user.id ?? '-';
+
+        welcomeNameSpan.textContent = name;
+        infoEmail.textContent = email;
+        infoId.textContent = id;
+        footerUser.textContent = 'Usuário autenticado: ' + name + ' (' + role + ')';
+        roleBadge.textContent = role.toUpperCase();
+
+        if (role === 'admin') {
+          roleBadge.style.borderColor = '#f97316';
+          roleBadge.style.background = '#451a03';
+          btnGoAdmin.style.display = 'inline-flex';
+        } else {
+          roleBadge.style.borderColor = '#22c55e';
+          roleBadge.style.background = '#064e3b';
+          btnGoAdmin.style.display = 'none';
+        }
+
+        renderTokenBox(data);
+      } catch (err) {
+        console.error(err);
+        welcomeNameSpan.textContent = 'Erro ao carregar usuário';
+        infoEmail.textContent = '-';
+        infoId.textContent = '-';
+        footerUser.textContent = 'Falha ao carregar usuário autenticado.';
+      }
+    }
+
+    async function loadStats() {
+      const totalUsersEl = document.getElementById('totalUsers');
+      const statsStatus = document.getElementById('statsStatus');
+
+      totalUsersEl.textContent = '...';
+      statsStatus.textContent = 'Carregando usuários...';
+
+      try {
+        const users = await apiRequest('/api/users', { method: 'GET' });
+        totalUsersEl.textContent = users.length;
+        statsStatus.textContent = 'Estatísticas atualizadas com sucesso.';
+      } catch (err) {
+        console.error(err);
+        statsStatus.textContent = 'Erro: ' + err.message;
+        totalUsersEl.textContent = '-';
+      }
+    }
+
+    async function updateStatus() {
+      const serverDot = document.getElementById('status-server');
+      const dbDot = document.getElementById('status-db');
+      const latencyLabel = document.getElementById('latency-label');
+
+      serverDot.className = 'status-indicator gray';
+      dbDot.className = 'status-indicator gray';
+      latencyLabel.textContent = '---';
+
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+
+        // Se respondeu, o servidor está ok
+        serverDot.className = 'status-indicator green';
+
+        if (data.database === 'online') {
+          dbDot.className = 'status-indicator green';
+        } else {
+          dbDot.className = 'status-indicator red';
+        }
+
+        if (typeof data.latency_ms === 'number') {
+          latencyLabel.textContent = data.latency_ms + ' ms';
+        } else {
+          latencyLabel.textContent = '---';
+        }
+      } catch (err) {
+        console.error('Erro ao buscar /api/status:', err);
+        serverDot.className = 'status-indicator red';
+        dbDot.className = 'status-indicator red';
+        latencyLabel.textContent = 'erro';
+      }
+    }
+
+    function setupButtons() {
+      const logoutBtn = document.getElementById('logoutBtn');
+      const btnGoProfile = document.getElementById('btnGoProfile');
+      const btnGoAdmin = document.getElementById('btnGoAdmin');
+      const btnRefreshUsers = document.getElementById('btnRefreshUsers');
+      const btnRefreshStatus = document.getElementById('btn-refresh-status');
+
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login.html';
       });
-      if (!res.ok) {
-        totalUsersEl.textContent = "?";
-        return;
-      }
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        totalUsersEl.textContent = data.length;
-      } else {
-        totalUsersEl.textContent = "?";
-      }
-    } catch (err) {
-      totalUsersEl.textContent = "?";
+
+      btnGoProfile.addEventListener('click', () => {
+        window.location.href = '/profile.html';
+      });
+
+      btnGoAdmin.addEventListener('click', () => {
+        window.location.href = '/index.html';
+      });
+
+      btnRefreshUsers.addEventListener('click', loadStats);
+      btnRefreshStatus.addEventListener('click', updateStatus);
     }
-  }
 
-  document.getElementById("logoutBtn").addEventListener("click", () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login.html";
-  });
-
-  document.getElementById("refreshStatsBtn").addEventListener("click", loadStats);
-
-  loadMe();
-  loadStats();
-})();
-</script>
-
+    document.addEventListener('DOMContentLoaded', async () => {
+      ensureAuthenticated();
+      setupButtons();
+      await loadUserInfo();
+      await loadStats();
+      await updateStatus();
+      // Atualiza status a cada 15s
+      setInterval(updateStatus, 15000);
+    });
+  </script>
 </body>
 </html>
+

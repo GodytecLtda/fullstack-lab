@@ -1,186 +1,330 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cadastro - Fullstack Lab do Adelmo 🚀</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-    .container {
-      max-width: 420px;
-      margin: 80px auto;
-      background: #020617;
-      padding: 24px 28px;
-      border-radius: 16px;
-      border: 1px solid #1f2937;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
-    }
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 4px;
-    }
-    .subtitle {
-      color: #9ca3af;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      font-size: 0.9rem;
-      margin-top: 10px;
-      margin-bottom: 4px;
-    }
-    input {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 0.9rem;
-    }
-    input:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px #2563eb44;
-    }
-    button {
-      width: 100%;
-      margin-top: 18px;
-      padding: 9px 0;
-      border-radius: 999px;
-      border: none;
-      background: #2563eb;
-      color: #f9fafb;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    button:hover {
-      filter: brightness(1.1);
-    }
-    .footer {
-      margin-top: 16px;
-      font-size: 0.85rem;
-      color: #9ca3af;
-      text-align: center;
-    }
-    a {
-      color: #60a5fa;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    pre {
-      margin-top: 10px;
-      font-size: 0.85rem;
-      background: #020617;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #1f2937;
-      white-space: pre-wrap;
-    }
-    .error {
-      color: #f97373;
-    }
-    .success {
-      color: #4ade80;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro – Fullstack Lab | Criar Conta</title>
+
+    <style>
+        /* CSS COMPLETO DO LOGIN.HTML (Dark Mode / Glow) */
+        :root {
+            --bg-body: #050816;
+            --bg-card: #0b1020;
+            --bg-soft: #10172b;
+
+            --border-soft: rgba(59,130,246,0.25);
+            --blue: #3b82f6;
+            --blue-strong: #2563eb;
+            --blue-glow: rgba(59,130,246,0.45);
+
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+
+            --input-bg: #0a0f1f;
+            --input-border: rgba(59,130,246,0.25);
+
+            --error-bg: #7f1d1d;
+            --error-border: #b91c1c;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #0f172a 0, #0a0f1f 55%, #000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #0f172a 0%, #0a0f1f 60%, #020617 100%);
+            border: 1px solid var(--border-soft);
+            border-radius: 22px;
+            padding: 32px 28px;
+            box-shadow:
+                0 18px 40px rgba(15,23,42,0.7),
+                0 0 0 1px rgba(59,130,246,0.25);
+        }
+
+        .card-header {
+            margin-bottom: 18px;
+        }
+
+        .pill-center {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            background: rgba(59,130,246,0.15);
+            color: #bfdbfe;
+            border: 1px solid rgba(59,130,246,0.35);
+            letter-spacing: 0.04em;
+        }
+
+        .pill-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: var(--blue);
+            box-shadow: 0 0 8px var(--blue-glow);
+            display: block;
+            animation: pulseDot 1.8s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 6px rgba(59,130,246,0.45);
+            }
+            50% {
+                transform: scale(1.35);
+                box-shadow: 0 0 10px rgba(59,130,246,0.75);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 6px rgba(59,130,246,0.45);
+            }
+        }
+
+        h1.card-title {
+            font-size: 14px;
+            margin: 0;
+            margin-bottom:0px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        p.card-subtitle {
+            font-size: 13px;
+            margin-top: 0px;
+            color: var(--text-muted);
+            text-align: left;
+        }
+
+        .field {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .field-label {
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 11px 40px 11px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: 0.15s ease;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 1px var(--blue),
+                        0 0 0 10px rgba(59,130,246,0.12);
+            outline: none;
+        }
+        
+        .input-wrapper input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+
+        .toggle-visibility {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 2px 4px;
+            font-size: 15px;
+            border-radius: 6px;
+            transition: 0.15s ease;
+            line-height: 1;
+        }
+
+        .toggle-visibility:hover {
+            background: rgba(59,130,246,0.12);
+            color: #e2e8f0;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 13px;
+            border-radius: 999px;
+            font-size: 15px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--blue), var(--blue-strong));
+            border: none;
+            color: #eff6ff;
+            cursor: pointer;
+            box-shadow:
+                0 15px 30px rgba(37,99,235,0.45),
+                0 0 0 1px rgba(37,99,235,0.8);
+            transition: 0.15s ease;
+            margin-top: 4px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 18px 38px rgba(37,99,235,0.6),
+                0 0 0 1px rgba(37,99,235,1);
+        }
+
+        .footer-text {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-text a {
+            color: #60a5fa;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .error-box {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 12px;
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            text-align: center;
+            color: #fee2e2;
+            font-size: 13px;
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
+    <main class="shell"> 
+        <article class="card"> 
 
-<div class="container">
-  <h1>Criar conta</h1>
-  <p class="subtitle">Preencha os dados para criar seu usuário no laboratório.</p>
+            <header class="card-header">
+                <div class="pill-center">
+                    <div class="pill">
+                        <span class="pill-dot" role="status" aria-label="Ambiente seguro ativo"></span> 
+                        <span>Ambiente Seguro</span>
+                    </div>
+                </div>
 
-  <label for="name">Nome</label>
-  <input id="name" type="text" placeholder="Seu nome completo" />
+                <h1 class="card-title">Criar Conta</h1> 
+                <p class="card-subtitle">Junte-se ao laboratório e comece a aprender</p>
+            </header>
 
-  <label for="email">E-mail</label>
-  <input id="email" type="email" placeholder="voce@exemplo.com" />
+            <form id="registerForm" method="POST" action="/api/register"> 
+                
+                <div class="field">
+                    <label for="name" class="field-label">Nome Completo</label>
+                    <div class="input-wrapper">
+                        <input 
+                            id="name" 
+                            type="text" 
+                            placeholder="Seu nome completo" 
+                            required 
+                            autocomplete="name"
+                            aria-label="Nome completo do usuário"
+                        />
+                    </div>
+                </div>
 
-  <label for="password">Senha</label>
-  <input id="password" type="password" placeholder="Crie uma senha" />
+                <div class="field">
+                    <label for="email" class="field-label">Email</label>
+                    <div class="input-wrapper">
+                        <input 
+                            id="email" 
+                            type="email" 
+                            placeholder="voce@exemplo.com" 
+                            required 
+                            autocomplete="email"
+                            aria-label="Email para a conta"
+                        />
+                    </div>
+                </div>
 
-  <label for="password2">Confirmar senha</label>
-  <input id="password2" type="password" placeholder="Repita a senha" />
+                <div class="field">
+                    <label for="password" class="field-label">Senha</label>
+                    <div class="input-wrapper">
+                        <input 
+                            id="password" 
+                            type="password" 
+                            placeholder="Crie uma senha forte" 
+                            required 
+                            autocomplete="new-password"
+                            aria-label="Crie uma senha para a conta"
+                        />
+                        <button type="button" class="toggle-visibility" data-target="password" aria-label="Mostrar ou esconder senha">👁</button>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label for="confirm_password" class="field-label">Confirmar Senha</label>
+                    <div class="input-wrapper">
+                        <input 
+                            id="confirm_password" 
+                            type="password" 
+                            placeholder="Repita a senha" 
+                            required 
+                            autocomplete="new-password"
+                            aria-label="Confirme a senha criada"
+                        />
+                        <button type="button" class="toggle-visibility" data-target="confirm_password" aria-label="Mostrar ou esconder senha de confirmação">👁</button>
+                    </div>
+                </div>
 
-  <button id="registerBtn">Cadastrar</button>
 
-  <pre id="result"></pre>
+                <button type="submit" class="btn-primary">Criar Conta</button>
+                
+                <div id="errorBox" class="error-box" role="alert" aria-live="polite"></div>
 
-  <div class="footer">
-    Já tem conta?
-    <a href="/login.html">Ir para o login</a>
-  </div>
-</div>
+                <footer class="footer-text">
+                    Já tem uma conta?
+                    <a href="/login.html">Fazer Login</a>
+                </footer>
+            </form>
 
-<script>
-const resultEl = document.getElementById("result");
-const btn = document.getElementById("registerBtn");
+        </article>
+    </main>
 
-btn.addEventListener("click", async () => {
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const password2 = document.getElementById("password2").value.trim();
-
-  resultEl.className = "";
-  resultEl.textContent = "";
-
-  if (!name || !email || !password || !password2) {
-    resultEl.className = "error";
-    resultEl.textContent = "Preencha todos os campos.";
-    return;
-  }
-
-  if (password !== password2) {
-    resultEl.className = "error";
-    resultEl.textContent = "As senhas não conferem.";
-    return;
-  }
-
-  resultEl.textContent = "Enviando...";
-
-  try {
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      resultEl.className = "error";
-      resultEl.textContent =
-        "Erro " + res.status + ":\n" + JSON.stringify(data, null, 2);
-      return;
-    }
-
-    resultEl.className = "success";
-    resultEl.textContent =
-      "Usuário criado com sucesso!\nAgora você já pode fazer login.";
-
-    // opcional: limpar campos
-    document.getElementById("password").value = "";
-    document.getElementById("password2").value = "";
-
-    // opcional: redirecionar depois de alguns segundos
-    setTimeout(() => {
-      window.location.href = "/login.html";
-    }, 2000);
-  } catch (err) {
-    resultEl.className = "error";
-    resultEl.textContent = "Erro de conexão: " + err.message;
-  }
-});
-</script>
-
+    <script src="register.js" defer></script> 
 </body>
 </html>
