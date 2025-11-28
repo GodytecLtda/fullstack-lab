@@ -1,280 +1,297 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login – Fullstack Lab</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Fullstack Lab | Acesse sua Conta</title>
 
-  <style>
-    :root {
-      --bg-body: #050816;
-      --bg-card: #0b1020;
-      --bg-soft: #10172b;
+    <style>
+        :root {
+            --bg-body: #050816;
+            --bg-card: #0b1020;
+            --bg-soft: #10172b;
 
-      --border-soft: rgba(59,130,246,0.25);
-      --blue: #3b82f6;
-      --blue-strong: #2563eb;
-      --blue-glow: rgba(59,130,246,0.45);
+            --border-soft: rgba(59,130,246,0.25);
+            --blue: #3b82f6;
+            --blue-strong: #2563eb;
+            --blue-glow: rgba(59,130,246,0.45);
 
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
 
-      --input-bg: #0a0f1f;
-      --input-border: rgba(59,130,246,0.25);
+            --input-bg: #0a0f1f;
+            --input-border: rgba(59,130,246,0.25);
 
-      --error-bg: #7f1d1d;
-      --error-border: #b91c1c;
-    }
+            --error-bg: #7f1d1d;
+            --error-border: #b91c1c;
+        }
 
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #0f172a 0, #0a0f1f 55%, #000 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: var(--text-main);
-    }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #0f172a 0, #0a0f1f 55%, #000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
 
-    .shell {
-      width: 100%;
-      max-width: 420px;
-      padding: 24px;
-    }
+        .shell {
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+        }
 
-    .card {
-      background: linear-gradient(135deg, #0f172a 0%, #0a0f1f 60%, #020617 100%);
-      border: 1px solid var(--border-soft);
-      border-radius: 22px;
-      padding: 32px 28px;
-      box-shadow:
-        0 18px 40px rgba(15,23,42,0.7),
-        0 0 0 1px rgba(59,130,246,0.25);
-    }
+        .card {
+            background: linear-gradient(135deg, #0f172a 0%, #0a0f1f 60%, #020617 100%);
+            border: 1px solid var(--border-soft);
+            border-radius: 22px;
+            padding: 32px 28px;
+            box-shadow:
+                0 18px 40px rgba(15,23,42,0.7),
+                0 0 0 1px rgba(59,130,246,0.25);
+        }
 
-    .card-header {
-      margin-bottom: 18px;
-    }
+        .card-header {
+            margin-bottom: 18px;
+        }
 
-    .pill-center {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      margin-bottom: 12px;
-    }
+        .pill-center {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 12px;
+        }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 11px;
-      background: rgba(59,130,246,0.15);
-      color: #bfdbfe;
-      border: 1px solid rgba(59,130,246,0.35);
-      letter-spacing: 0.04em;
-    }
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            background: rgba(59,130,246,0.15);
+            color: #bfdbfe;
+            border: 1px solid rgba(59,130,246,0.35);
+            letter-spacing: 0.04em;
+        }
 
-    .pill-dot {
-     width: 7px;
-     height: 7px;
-     border-radius: 999px;
-     background: var(--blue);
-     box-shadow: 0 0 8px var(--blue-glow);
-     display: block;
-     animation: pulseDot 1.8s ease-in-out infinite; /* animação adicionada */
-     }
+        .pill-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: var(--blue);
+            box-shadow: 0 0 8px var(--blue-glow);
+            display: block;
+            animation: pulseDot 1.8s ease-in-out infinite;
+        }
 
-    @keyframes pulseDot {
-    0% {
-    transform: scale(1);
-    box-shadow: 0 0 6px rgba(59,130,246,0.45);
-    }
-    50% {
-    transform: scale(1.35);
-    box-shadow: 0 0 10px rgba(59,130,246,0.75);
-    }
-    100% {
-    transform: scale(1);
-    box-shadow: 0 0 6px rgba(59,130,246,0.45);
-    }
-    }
+        @keyframes pulseDot {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 6px rgba(59,130,246,0.45);
+            }
+            50% {
+                transform: scale(1.35);
+                box-shadow: 0 0 10px rgba(59,130,246,0.75);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 6px rgba(59,130,246,0.45);
+            }
+        }
 
-    }
+        h1.card-title {
+            font-size: 14px;
+            margin: 0;
+            margin-bottom:0px;
+            font-weight: 600;
+            text-align: left;
+        }
 
-    h1.card-title {
-      font-size: 14px;
-      margin: 0;
-      margin-bottom:0px;
-      font-weight: 600;
-      text-align: left;
-    }
+        p.card-subtitle {
+            font-size: 13px;
+            margin-top: 0px;
+            color: var(--text-muted);
+            text-align: left;
+        }
 
-    p.card-subtitle {
-      font-size: 13px;
-      margin-top: 0px;
-      color: var(--text-muted);
-      text-align: left;
-    }
+        .field {
+            margin-bottom: 18px;
+            text-align: left;
+        }
 
-    .field {
-      margin-bottom: 18px;
-      text-align: left;
-    }
+        .field-label {
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+            display: block;
+        }
 
-    .field-label {
-      margin-bottom: 6px;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
+        .input-wrapper {
+            position: relative;
+        }
 
-    .input-wrapper {
-      position: relative;
-    }
+        .input-wrapper input {
+            width: 100%;
+            padding: 11px 40px 11px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: 0.15s ease;
+        }
 
-    .input-wrapper input {
-      width: 100%;
-      padding: 11px 40px 11px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--input-border);
-      background: var(--input-bg);
-      color: var(--text-main);
-      font-size: 14px;
-      box-sizing: border-box;
-      transition: 0.15s ease;
-    }
+        .input-wrapper input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 1px var(--blue),
+                        0 0 0 10px rgba(59,130,246,0.12);
+            outline: none;
+        }
+        
+        .input-wrapper input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
 
-    .input-wrapper input:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 1px var(--blue),
-                  0 0 0 10px rgba(59,130,246,0.12);
-    }
 
-    .toggle-visibility {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: none;
-      background: transparent;
-      color: #9ca3af;
-      cursor: pointer;
-      padding: 2px 4px;
-      font-size: 15px;
-      border-radius: 6px;
-      transition: 0.15s ease;
-    }
+        .toggle-visibility {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 2px 4px;
+            font-size: 15px;
+            border-radius: 6px;
+            transition: 0.15s ease;
+            line-height: 1;
+        }
 
-    .toggle-visibility:hover {
-      background: rgba(59,130,246,0.12);
-      color: #e2e8f0;
-    }
+        .toggle-visibility:hover {
+            background: rgba(59,130,246,0.12);
+            color: #e2e8f0;
+        }
 
-    .btn-primary {
-      width: 100%;
-      padding: 13px;
-      border-radius: 999px;
-      font-size: 15px;
-      font-weight: 600;
-      background: linear-gradient(135deg, var(--blue), var(--blue-strong));
-      border: none;
-      color: #eff6ff;
-      cursor: pointer;
-      box-shadow:
-        0 15px 30px rgba(37,99,235,0.45),
-        0 0 0 1px rgba(37,99,235,0.8);
-      transition: 0.15s ease;
-      margin-top: 4px;
-    }
+        .btn-primary {
+            width: 100%;
+            padding: 13px;
+            border-radius: 999px;
+            font-size: 15px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--blue), var(--blue-strong));
+            border: none;
+            color: #eff6ff;
+            cursor: pointer;
+            box-shadow:
+                0 15px 30px rgba(37,99,235,0.45),
+                0 0 0 1px rgba(37,99,235,0.8);
+            transition: 0.15s ease;
+            margin-top: 4px;
+        }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow:
-        0 18px 38px rgba(37,99,235,0.6),
-        0 0 0 1px rgba(37,99,235,1);
-    }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 18px 38px rgba(37,99,235,0.6),
+                0 0 0 1px rgba(37,99,235,1);
+        }
 
-    .footer-text {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
+        .footer-text {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
 
-    .footer-text a {
-      color: #60a5fa;
-      font-weight: 500;
-      text-decoration: none;
-    }
+        .footer-text a {
+            color: #60a5fa;
+            font-weight: 500;
+            text-decoration: none;
+        }
 
-    .footer-text a:hover {
-      text-decoration: underline;
-    }
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
 
-    .error-box {
-      margin-top: 12px;
-      padding: 10px;
-      border-radius: 12px;
-      background: var(--error-bg);
-      border: 1px solid var(--error-border);
-      text-align: center;
-      color: #fee2e2;
-      font-size: 13px;
-      display: none;
-    }
-  </style>
+        .error-box {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 12px;
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            text-align: center;
+            color: #fee2e2;
+            font-size: 13px;
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="shell">
-    <div class="card">
+    <main class="shell"> 
+        <article class="card"> <header class="card-header">
+                <div class="pill-center">
+                    <div class="pill">
+                        <span class="pill-dot" role="status" aria-label="Ambiente seguro ativo"></span> 
+                        <span>Ambiente Seguro</span>
+                    </div>
+                </div>
 
-      <div class="card-header">
+                <h1 class="card-title">Acessar Laboratório</h1> 
+                <p class="card-subtitle">Insira suas credenciais para continuar</p>
+            </header>
 
-        <!-- PILL CENTRALIZADA -->
-        <div class="pill-center">
-          <div class="pill">
-            <span class="pill-dot"></span>
-            <span>Ambiente Seguro</span>
-          </div>
-        </div>
+            <form id="loginForm" method="POST" action="/api/login"> 
+                
+                <div class="field">
+                    <label for="email" class="field-label">Usuário (Email)</label>
+                    <div class="input-wrapper">
+                        <input 
+                            id="email" 
+                            type="email" 
+                            placeholder="exemplo@dominio.com" 
+                            required 
+                            autocomplete="username"
+                            aria-label="Email do usuário"
+                        />
+                    </div>
+                </div>
 
-        <!-- RESTANTE À ESQUERDA -->
-        <h1 class="card-title">Login</h1>
-        <p class="card-subtitle">Entre para acessar o laboratório</p>
-      </div>
+                <div class="field">
+                    <label for="password" class="field-label">Senha</label>
+                    <div class="input-wrapper">
+                        <input 
+                            id="password" 
+                            type="password" 
+                            placeholder="••••••••" 
+                            required 
+                            autocomplete="current-password"
+                            aria-label="Senha do usuário"
+                        />
+                        <button type="button" class="toggle-visibility" data-target="password" aria-label="Mostrar ou esconder senha">👁</button>
+                    </div>
+                </div>
 
-      <form id="loginForm">
-        <div class="field">
-          <label class="field-label">Usuário</label>
-          <div class="input-wrapper">
-            <input id="email" type="email" placeholder="digite seu email" required />
-            <button class="toggle-visibility" disabled>📧</button>
-          </div>
-        </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+                
+                <div id="errorBox" class="error-box" role="alert" aria-live="polite"></div>
 
-        <div class="field">
-          <label class="field-label">Senha</label>
-          <div class="input-wrapper">
-            <input id="password" type="password" placeholder="digite sua senha" required />
-            <button type="button" class="toggle-visibility" data-toggle-password data-target="password">👁</button>
-          </div>
-        </div>
+                <footer class="footer-text">
+                    Ainda não tem conta?
+                    <a href="/register.html">Criar uma conta</a>
+                </footer>
+            </form>
 
-        <button type="submit" class="btn-primary">Entrar</button>
-        <div id="errorBox" class="error-box"></div>
+        </article>
+    </main>
 
-        <div class="footer-text">
-          Ainda não tem conta?
-          <a href="/register.html">Criar uma conta</a>
-        </div>
-      </form>
-
-    </div>
-  </div>
-
-  <script src="/login.js"></script>
+    <script src="/login.js" defer></script>
 </body>
 </html>
