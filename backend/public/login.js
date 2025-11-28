@@ -1,58 +1,60 @@
-const resultEl = document.getElementById("result");
-const loginBtn = document.getElementById("login-btn");
+const form = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const errorBox = document.getElementById("errorBox");
 
-const API_LOGIN_URL = "/api/login";
+// Toggle de visibilidade da senha
+document.querySelectorAll("[data-toggle-password]").forEach((button) => {
+  const targetId = button.getAttribute("data-target");
+  const input = document.getElementById(targetId);
 
-loginBtn.addEventListener("click", async () => {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  button.addEventListener("click", () => {
+    if (!input) return;
 
-  if (!username || !password) {
-    resultEl.textContent = "Preencha usuário (e-mail) e senha.";
+    const isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+    button.querySelector("span").textContent = isPassword ? "🙈" : "👁";
+  });
+});
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!email || !password) {
+    errorBox.style.display = "block";
+    errorBox.textContent = "Preencha email e senha para continuar.";
     return;
   }
 
-  resultEl.textContent = "Verificando...";
-
   try {
-    const response = await fetch(API_LOGIN_URL, {
+    const response = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      console.error("Resposta não OK:", response.status, text);
-      resultEl.textContent = `Erro: servidor respondeu ${response.status}`;
+      errorBox.style.display = "block";
+      if (response.status === 400 || response.status === 401) {
+        errorBox.textContent = "Email ou senha inválidos.";
+      } else {
+        errorBox.textContent = `Erro ao fazer login (código ${response.status}).`;
+      }
       return;
     }
 
-    let data;
-    try {
-      data = await response.json();
-    } catch (err) {
-      console.error("Erro ao fazer parse do JSON:", err);
-      resultEl.textContent = "Erro ao interpretar resposta do servidor.";
-      return;
+    const data = await response.json();
+    if (data.token) {
+      localStorage.setItem("token", data.token);
     }
 
-    if (!data.ok) {
-      resultEl.textContent = "Erro: " + (data.error || "credenciais inválidas.");
-      return;
-    }
-
-    // salva token
-    localStorage.setItem("token", data.token);
-
-    resultEl.textContent = "Login bem-sucedido! Redirecionando...";
-
-    setTimeout(() => {
-      window.location.href = "/dashboard.html";
-    }, 800);
-
+    window.location.href = "/dashboard.html";
   } catch (err) {
-    console.error("Erro de rede no fetch:", err);
-    resultEl.textContent = "Erro de conexão com o servidor.";
+    console.error(err);
+    errorBox.style.display = "block";
+    errorBox.textContent = "Erro: não foi possível conectar ao servidor.";
   }
 });
