@@ -1,186 +1,223 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cadastro - Fullstack Lab do Adelmo 🚀</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-    .container {
-      max-width: 420px;
-      margin: 80px auto;
-      background: #020617;
-      padding: 24px 28px;
-      border-radius: 16px;
-      border: 1px solid #1f2937;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
-    }
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 4px;
-    }
-    .subtitle {
-      color: #9ca3af;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      font-size: 0.9rem;
-      margin-top: 10px;
-      margin-bottom: 4px;
-    }
-    input {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 0.9rem;
-    }
-    input:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px #2563eb44;
-    }
-    button {
-      width: 100%;
-      margin-top: 18px;
-      padding: 9px 0;
-      border-radius: 999px;
-      border: none;
-      background: #2563eb;
-      color: #f9fafb;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    button:hover {
-      filter: brightness(1.1);
-    }
-    .footer {
-      margin-top: 16px;
-      font-size: 0.85rem;
-      color: #9ca3af;
-      text-align: center;
-    }
-    a {
-      color: #60a5fa;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    pre {
-      margin-top: 10px;
-      font-size: 0.85rem;
-      background: #020617;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #1f2937;
-      white-space: pre-wrap;
-    }
-    .error {
-      color: #f97373;
-    }
-    .success {
-      color: #4ade80;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criar conta – Fullstack Lab</title>
+
+    <style>
+        /* ====== LAYOUT GERAL ====== */
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at top, #0b1220, #05070d);
+            font-family: "Inter", sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* ====== CARD ====== */
+        .card {
+            width: 430px;
+            background: rgba(10, 15, 28, 0.86);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 50px 45px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.55);
+            position: relative;
+        }
+
+        /* ====== PILL (Ambiente Seguro) ====== */
+        .pill {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #123b91;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #dbe6ff;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #4fa3ff;
+            border-radius: 50%;
+            animation: pulse 1.8s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.65); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+
+        /* ====== TÍTULOS ====== */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            margin-top: 10px;
+        }
+
+        p.sub {
+            font-size: 15px;
+            color: #b7c3dd;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        /* ====== INPUTS ====== */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #d5def5;
+        }
+
+        .input-container {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .input-container input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            color: white;
+        }
+
+        .input-container img {
+            width: 24px;
+            opacity: 0.8;
+        }
+
+        input::placeholder {
+            color: #7b869f;
+        }
+
+        /* ====== BOTÃO NEON PÍLULA ====== */
+        .btn {
+            width: 100%;
+            margin-top: 30px;
+            padding: 16px 0;
+
+            background: linear-gradient(135deg, #1f5eff, #45a3ff);
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+
+            box-shadow: 0 18px 45px rgba(37, 99, 235, 0.55);
+            transition: 0.25s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.06);
+            box-shadow: 0 24px 60px rgba(37, 99, 235, 0.8);
+        }
+
+        /* ====== LINK FINAL ====== */
+        .footer-link {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .footer-link a {
+            color: #4da3ff;
+            text-decoration: none;
+        }
+
+    </style>
 </head>
+
 <body>
 
-<div class="container">
-  <h1>Criar conta</h1>
-  <p class="subtitle">Preencha os dados para criar seu usuário no laboratório.</p>
+    <div class="card">
 
-  <label for="name">Nome</label>
-  <input id="name" type="text" placeholder="Seu nome completo" />
+        <!-- PILL -->
+        <div class="pill">
+            <div class="dot"></div>
+            Ambiente Seguro
+        </div>
 
-  <label for="email">E-mail</label>
-  <input id="email" type="email" placeholder="voce@exemplo.com" />
+        <!-- TÍTULO -->
+        <h1>Criar conta</h1>
+        <p class="sub">Preencha os dados para criar seu usuário no laboratório.</p>
 
-  <label for="password">Senha</label>
-  <input id="password" type="password" placeholder="Crie uma senha" />
+        <!-- NOME -->
+        <div class="input-group">
+            <label>Nome</label>
+            <div class="input-container">
+                <input type="text" id="name" placeholder="Seu nome completo" />
+                <img src="icons/user.png" alt="">
+            </div>
+        </div>
 
-  <label for="password2">Confirmar senha</label>
-  <input id="password2" type="password" placeholder="Repita a senha" />
+        <!-- EMAIL -->
+        <div class="input-group">
+            <label>E-mail</label>
+            <div class="input-container">
+                <input type="email" id="email" placeholder="voce@exemplo.com" />
+                <img src="icons/email.png" alt="">
+            </div>
+        </div>
 
-  <button id="registerBtn">Cadastrar</button>
+        <!-- SENHA -->
+        <div class="input-group">
+            <label>Senha</label>
+            <div class="input-container">
+                <input type="password" id="password" placeholder="Crie uma senha" />
+                <img src="icons/lock.png" alt="">
+            </div>
+        </div>
 
-  <pre id="result"></pre>
+        <!-- CONFIRMAR SENHA -->
+        <div class="input-group">
+            <label>Confirmar senha</label>
+            <div class="input-container">
+                <input type="password" id="confirm" placeholder="Repita a senha" />
+                <img src="icons/lock.png" alt="">
+            </div>
+        </div>
 
-  <div class="footer">
-    Já tem conta?
-    <a href="/login.html">Ir para o login</a>
-  </div>
-</div>
+        <!-- BOTÃO -->
+        <button class="btn" onclick="register()">Cadastrar</button>
 
-<script>
-const resultEl = document.getElementById("result");
-const btn = document.getElementById("registerBtn");
+        <!-- LINK LOGIN -->
+        <div class="footer-link">
+            Já tem conta?
+            <a href="login.html">Ir para o login</a>
+        </div>
 
-btn.addEventListener("click", async () => {
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const password2 = document.getElementById("password2").value.trim();
+    </div>
 
-  resultEl.className = "";
-  resultEl.textContent = "";
-
-  if (!name || !email || !password || !password2) {
-    resultEl.className = "error";
-    resultEl.textContent = "Preencha todos os campos.";
-    return;
-  }
-
-  if (password !== password2) {
-    resultEl.className = "error";
-    resultEl.textContent = "As senhas não conferem.";
-    return;
-  }
-
-  resultEl.textContent = "Enviando...";
-
-  try {
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      resultEl.className = "error";
-      resultEl.textContent =
-        "Erro " + res.status + ":\n" + JSON.stringify(data, null, 2);
-      return;
-    }
-
-    resultEl.className = "success";
-    resultEl.textContent =
-      "Usuário criado com sucesso!\nAgora você já pode fazer login.";
-
-    // opcional: limpar campos
-    document.getElementById("password").value = "";
-    document.getElementById("password2").value = "";
-
-    // opcional: redirecionar depois de alguns segundos
-    setTimeout(() => {
-      window.location.href = "/login.html";
-    }, 2000);
-  } catch (err) {
-    resultEl.className = "error";
-    resultEl.textContent = "Erro de conexão: " + err.message;
-  }
-});
-</script>
+    <script src="register.js"></script>
 
 </body>
 </html>
