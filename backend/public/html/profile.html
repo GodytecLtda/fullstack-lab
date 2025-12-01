@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Meu Perfil - Fullstack Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="/css/profile.css" />
+</head>
+<body>
+  <div class="shell">
+    <header class="header">
+      <div class="header-left">
+        <div class="title">Meu Perfil</div>
+        <p class="subtitle">
+          Gerencie seus dados da conta do laboratório fullstack.
+        </p>
+      </div>
+      <div class="header-actions">
+        <a href="/html/dashboard.html" class="btn-link">
+          ⬅ Voltar para o Dashboard
+        </a>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <section class="card">
+        <h2>Dados de Perfil</h2>
+        <p class="card-subtitle">Atualize nome e e-mail usados no sistema.</p>
+
+        <form id="profileForm">
+          <div class="form-group">
+            <label for="name">Nome</label>
+            <input type="text" id="name" autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" autocomplete="email" />
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            💾 Salvar alterações
+          </button>
+
+          <div id="profileStatus" class="status"></div>
+        </form>
+
+        <div class="divider"></div>
+
+        <h2>Trocar senha</h2>
+        <p class="card-subtitle">
+          Use sua senha atual para definir uma nova.
+        </p>
+
+        <form id="passwordForm">
+          <div class="form-group">
+            <label for="currentPassword">Senha atual</label>
+            <input
+              type="password"
+              id="currentPassword"
+              autocomplete="current-password"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="newPassword">Nova senha</label>
+            <input
+              type="password"
+              id="newPassword"
+              autocomplete="new-password"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            🔑 Atualizar senha
+          </button>
+
+          <div id="passwordStatus" class="status"></div>
+        </form>
+      </section>
+
+      <section class="card card-side">
+        <div class="card-header-line">
+          <h2>Dados do Token</h2>
+          <span class="mini-label">JWT armazenado no navegador</span>
+        </div>
+
+        <p class="card-subtitle">
+          Visualize o conteúdo do token usado para autenticação.
+        </p>
+
+        <div class="badge">
+          🔍 Inspecting JWT
+        </div>
+
+        <div id="tokenInfo" class="token-box">
+          Nenhum token encontrado.
+        </div>
+
+        <div class="danger-block">
+          <h2>Zona de perigo</h2>
+          <p class="danger-text">
+            Excluir sua conta é permanente. Isso remove seu usuário deste laboratório.
+          </p>
+
+          <button id="deleteAccountBtn" class="btn btn-danger">
+            🗑 Excluir minha conta
+          </button>
+
+          <div id="deleteStatus" class="status"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Ambiente: <strong>Lab Local</strong> (Node + Postgres)</span>
+      <span id="footerUser">Perfil conectado.</span>
+    </footer>
+  </div>
+
+  <script src="/js/profile.js"></script>
+</body>
+</html>

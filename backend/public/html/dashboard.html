@@ -4,296 +4,8 @@
   <meta charset="UTF-8" />
   <title>Dashboard - Godytec Fullstack Lab 🚀</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
-      color: #e5e7eb;
-    }
-
-    .shell {
-      width: 100%;
-      max-width: 1100px;
-      background: #020617;
-      border-radius: 18px;
-      border: 1px solid #1f2937;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65);
-      padding: 22px 22px 26px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .brand-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-    }
-
-    .brand-subtitle {
-      font-size: 0.85rem;
-      color: #9ca3af;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn-link {
-      text-decoration: none;
-      font-size: 0.85rem;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid #4b5563;
-      color: #e5e7eb;
-      background: #020617;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-link:hover {
-      background: #111827;
-    }
-
-    .btn-logout {
-      background: #7f1d1d;
-      border-color: #b91c1c;
-      color: #fee2e2;
-    }
-
-    .btn-logout:hover {
-      background: #991b1b;
-    }
-
-    main {
-      display: grid;
-      grid-template-columns: 1.7fr 1.3fr;
-      gap: 18px;
-    }
-
-    .card {
-      background: #020617;
-      border-radius: 14px;
-      border: 1px solid #1f2937;
-      padding: 16px 16px 18px;
-      margin-bottom: 14px;
-    }
-
-    .card h2 {
-      font-size: 1rem;
-      margin-bottom: 8px;
-    }
-
-    .card p {
-      font-size: 0.86rem;
-      color: #9ca3af;
-      margin-bottom: 8px;
-    }
-
-    .welcome-name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .role-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      border: 1px solid #f97316;
-      background: #451a03;
-      color: #fed7aa;
-      margin-top: 4px;
-    }
-
-    .status-card {
-      background: #020617;
-      border-radius: 14px;
-      border: 1px solid #1f2937;
-      padding: 14px 16px 16px;
-      margin-bottom: 10px;
-    }
-
-    .status-card h2 {
-      font-size: 0.98rem;
-      margin-bottom: 6px;
-    }
-
-    .status-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 6px 0;
-      font-size: 0.86rem;
-    }
-
-    .status-indicator {
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      transition: all 0.25s ease;
-    }
-
-    .status-indicator.green { background: #22c55e; box-shadow: 0 0 8px #22c55e80; }
-    .status-indicator.red   { background: #ef4444; box-shadow: 0 0 8px #ef444480; }
-    .status-indicator.yellow{ background: #facc15; box-shadow: 0 0 8px #facc1580; }
-    .status-indicator.gray  { background: #4b5563; }
-
-    .latency-text {
-      font-size: 0.86rem;
-      color: #94a3b8;
-    }
-
-    .btn-refresh {
-      margin-top: 10px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: none;
-      background: #1d4ed8;
-      color: #e5e7eb;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    .btn-refresh:hover {
-      background: #2563eb;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.88rem;
-      font-weight: 500;
-    }
-
-    .btn-primary {
-      background: #2563eb;
-      color: #e5e7eb;
-    }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
-
-    .btn-secondary {
-      background: #1f2937;
-      color: #e5e7eb;
-      border: 1px solid #374151;
-    }
-
-    .btn-secondary:hover {
-      background: #111827;
-    }
-
-    .info-line {
-      font-size: 0.86rem;
-      margin-bottom: 4px;
-    }
-
-    .info-label {
-      color: #9ca3af;
-      font-size: 0.8rem;
-    }
-
-    .info-value {
-      color: #e5e7eb;
-      word-break: break-all;
-    }
-
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .token-box {
-      max-height: 260px;
-      overflow: auto;
-      background: #020617;
-      border-radius: 10px;
-      border: 1px solid #1f2937;
-      padding: 8px;
-      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.75rem;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    .status-text {
-      margin-top: 6px;
-      font-size: 0.84rem;
-      color: #9ca3af;
-    }
-
-    footer {
-      margin-top: 4px;
-      font-size: 0.78rem;
-      color: #6b7280;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 880px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .shell {
-        border-radius: 0;
-        min-height: 100vh;
-      }
-
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .header-actions {
-        align-self: flex-end;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/css/dashboard.css" />
 </head>
 <body>
   <div class="shell">
@@ -304,17 +16,24 @@
       </div>
 
       <div class="header-actions">
-        <a href="/index.html" class="btn-link">👥 Gerenciar usuários</a>
+        <a href="/admin/crud.html" id="headerAdminLink" class="btn-link btn-link-admin">
+          👥 Gerenciar usuários
+        </a>
         <button id="logoutBtn" class="btn-link btn-logout">Logout</button>
       </div>
     </header>
 
     <main>
-      <section>
-        <!-- STATUS VISUAL -->
+      <section class="column">
         <div class="status-card">
-          <h2>Status do sistema</h2>
-          <p style="font-size:0.8rem; color:#9ca3af; margin-bottom:4px;">
+          <div class="card-header-line">
+            <h2>Status do sistema</h2>
+            <span class="status-pill">
+              <span class="status-dot"></span> Monitor em tempo real
+            </span>
+          </div>
+
+          <p class="card-subtitle">
             Snapshot rápido da saúde da API e do banco.
           </p>
 
@@ -333,13 +52,14 @@
             <span id="latency-label" class="latency-text">-- ms</span>
           </div>
 
-          <button id="btn-refresh-status" class="btn-refresh">Atualizar status</button>
+          <button id="btn-refresh-status" class="btn-refresh">
+            Atualizar status
+          </button>
         </div>
 
-        <!-- BEM-VINDO -->
         <div class="card">
-          <h2>Bem-vindo, <span id="welcomeNameSpan">Admin</span></h2>
-          <p>Resumo da sua sessão atual no laboratório.</p>
+          <h2>Bem-vindo, <span id="welcomeNameSpan" class="welcome-name">Admin</span></h2>
+          <p class="card-subtitle">Resumo da sua sessão atual no laboratório.</p>
 
           <div class="info-line">
             <span class="info-label">E-mail: </span>
@@ -350,8 +70,8 @@
             <span class="info-value" id="infoId">-</span>
           </div>
 
-          <div style="margin-top:6px;">
-            <span class="info-label">Papel: </span>
+          <div class="role-line">
+            <span class="info-label">Papel:</span>
             <span class="role-badge" id="roleBadge">ADMIN</span>
           </div>
 
@@ -365,17 +85,16 @@
           </div>
         </div>
 
-        <!-- ESTATÍSTICAS -->
         <div class="card">
           <h2>Estatísticas rápidas</h2>
-          <p>Visão simples baseada na API de usuários.</p>
+          <p class="card-subtitle">Visão simples baseada na API de usuários.</p>
 
           <div class="info-line">
             <span class="info-label">Total de usuários:</span>
             <span class="info-value" id="totalUsers">-</span>
           </div>
 
-          <button id="btnRefreshUsers" class="btn btn-primary" style="margin-top:8px;">
+          <button id="btnRefreshUsers" class="btn btn-primary btn-full">
             Atualizar estatísticas
           </button>
 
@@ -383,10 +102,16 @@
         </div>
       </section>
 
-      <section>
-        <div class="card">
-          <h2>Dados brutos da API</h2>
-          <p>Resposta direta de <code>/api/me</code> ou do token.</p>
+      <section class="column">
+        <div class="card card-token">
+          <div class="card-header-line">
+            <h2>Dados brutos da API</h2>
+            <span class="mini-label">/api/me + payload do token</span>
+          </div>
+
+          <p class="card-subtitle">
+            Visualize exatamente o que o backend enxerga sobre a sua sessão.
+          </p>
 
           <div class="token-box" id="tokenBox">
             Carregando dados...
@@ -406,6 +131,7 @@
   </div>
 
   <script>
+    // Funções de utilidade e API
     function getToken() {
       return localStorage.getItem('token');
     }
@@ -413,7 +139,7 @@
     function ensureAuthenticated() {
       const token = getToken();
       if (!token) {
-        window.location.href = '/login.html';
+        window.location.href = '/html/login.html';
       }
     }
 
@@ -432,7 +158,8 @@
         : await res.text().catch(() => '');
 
       if (!res.ok) {
-        const message = data?.error || data?.message || 'Erro ao comunicar com o servidor';
+        const message =
+          data?.error || data?.message || 'Erro ao comunicar com o servidor';
         throw new Error(message);
       }
       return data;
@@ -466,6 +193,7 @@
       const roleBadge = document.getElementById('roleBadge');
       const footerUser = document.getElementById('footerUser');
       const btnGoAdmin = document.getElementById('btnGoAdmin');
+      const headerAdminLink = document.getElementById('headerAdminLink');
 
       try {
         const data = await apiRequest('/api/me', { method: 'GET' });
@@ -479,17 +207,20 @@
         welcomeNameSpan.textContent = name;
         infoEmail.textContent = email;
         infoId.textContent = id;
-        footerUser.textContent = 'Usuário autenticado: ' + name + ' (' + role + ')';
+        footerUser.textContent =
+          'Usuário autenticado: ' + name + ' (' + role + ')';
         roleBadge.textContent = role.toUpperCase();
 
         if (role === 'admin') {
-          roleBadge.style.borderColor = '#f97316';
-          roleBadge.style.background = '#451a03';
+          roleBadge.style.borderColor = '#2563eb';
+          roleBadge.style.background = '#0d2d60';
           btnGoAdmin.style.display = 'inline-flex';
+          headerAdminLink.style.display = 'inline-flex';
         } else {
           roleBadge.style.borderColor = '#22c55e';
           roleBadge.style.background = '#064e3b';
           btnGoAdmin.style.display = 'none';
+          headerAdminLink.style.display = 'none';
         }
 
         renderTokenBox(data);
@@ -498,7 +229,8 @@
         welcomeNameSpan.textContent = 'Erro ao carregar usuário';
         infoEmail.textContent = '-';
         infoId.textContent = '-';
-        footerUser.textContent = 'Falha ao carregar usuário autenticado.';
+        footerUser.textContent =
+          'Falha ao carregar usuário autenticado.';
       }
     }
 
@@ -515,7 +247,8 @@
         statsStatus.textContent = 'Estatísticas atualizadas com sucesso.';
       } catch (err) {
         console.error(err);
-        statsStatus.textContent = 'Erro: ' + err.message;
+        statsStatus.textContent =
+          'Erro: Sem permissão ou falha na API. (' + err.message + ')';
         totalUsersEl.textContent = '-';
       }
     }
@@ -533,7 +266,6 @@
         const res = await fetch('/api/status');
         const data = await res.json();
 
-        // Se respondeu, o servidor está ok
         serverDot.className = 'status-indicator green';
 
         if (data.database === 'online') {
@@ -560,20 +292,21 @@
       const btnGoProfile = document.getElementById('btnGoProfile');
       const btnGoAdmin = document.getElementById('btnGoAdmin');
       const btnRefreshUsers = document.getElementById('btnRefreshUsers');
-      const btnRefreshStatus = document.getElementById('btn-refresh-status');
+      const btnRefreshStatus =
+        document.getElementById('btn-refresh-status');
 
       logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = '/login.html';
+        window.location.href = '/html/login.html';
       });
 
       btnGoProfile.addEventListener('click', () => {
-        window.location.href = '/profile.html';
+        window.location.href = '/html/profile.html';
       });
 
       btnGoAdmin.addEventListener('click', () => {
-        window.location.href = '/index.html';
+        window.location.href = '/admin/crud.html';
       });
 
       btnRefreshUsers.addEventListener('click', loadStats);
@@ -586,10 +319,8 @@
       await loadUserInfo();
       await loadStats();
       await updateStatus();
-      // Atualiza status a cada 15s
       setInterval(updateStatus, 15000);
     });
   </script>
 </body>
 </html>
-

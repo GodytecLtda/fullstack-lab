@@ -151,12 +151,11 @@
                         0 0 0 10px rgba(59,130,246,0.12);
             outline: none;
         }
-        
+
         .input-wrapper input::placeholder {
             color: var(--text-muted);
             opacity: 0.6;
         }
-
 
         .toggle-visibility {
             position: absolute;
@@ -235,29 +234,29 @@
 </head>
 
 <body>
-    <main class="shell"> 
-        <article class="card"> <header class="card-header">
+    <main class="shell">
+        <article class="card">
+            <header class="card-header">
                 <div class="pill-center">
                     <div class="pill">
-                        <span class="pill-dot" role="status" aria-label="Ambiente seguro ativo"></span> 
+                        <span class="pill-dot" role="status" aria-label="Ambiente seguro ativo"></span>
                         <span>Ambiente Seguro</span>
                     </div>
                 </div>
 
-                <h1 class="card-title">Acessar Laboratório</h1> 
+                <h1 class="card-title">Acessar Laboratório</h1>
                 <p class="card-subtitle">Insira suas credenciais para continuar</p>
             </header>
 
-            <form id="loginForm" method="POST" action="/api/login"> 
-                
+            <form id="loginForm" method="POST" action="/api/login">
                 <div class="field">
                     <label for="email" class="field-label">Usuário (Email)</label>
                     <div class="input-wrapper">
-                        <input 
-                            id="email" 
-                            type="email" 
-                            placeholder="exemplo@dominio.com" 
-                            required 
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="exemplo@dominio.com"
+                            required
                             autocomplete="username"
                             aria-label="Email do usuário"
                         />
@@ -267,11 +266,11 @@
                 <div class="field">
                     <label for="password" class="field-label">Senha</label>
                     <div class="input-wrapper">
-                        <input 
-                            id="password" 
-                            type="password" 
-                            placeholder="••••••••" 
-                            required 
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="••••••••"
+                            required
                             autocomplete="current-password"
                             aria-label="Senha do usuário"
                         />
@@ -280,18 +279,17 @@
                 </div>
 
                 <button type="submit" class="btn-primary">Entrar</button>
-                
+
                 <div id="errorBox" class="error-box" role="alert" aria-live="polite"></div>
 
                 <footer class="footer-text">
                     Ainda não tem conta?
-                    <a href="/register.html">Criar uma conta</a>
+                    <a href="/html/register.html">Criar uma conta</a>
                 </footer>
             </form>
-
         </article>
     </main>
 
-    <script src="/login.js" defer></script>
+    <script src="/js/login.js" defer></script>
 </body>
 </html>

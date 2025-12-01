@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Admin - Gerenciamento de Usuários</title>
+    <style>
+        /* ESTILOS DE BASE (Adaptar ao seu CSS) */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1f; /* Cor de fundo escura */
+            color: #f0f0f0; /* Cor do texto claro */
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        h1 {
+            color: #4CAF50; /* Destaque verde/primary */
+            margin-bottom: 20px;
+        }
+        /* ESTILOS DE FORMULÁRIO E CARTÕES */
+        .card {
+            background-color: #2c2c34; /* Cartão ligeiramente mais claro */
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background-color: #1a1a1f;
+            color: #f0f0f0;
+            box-sizing: border-box;
+        }
+        /* ESTILOS DE BOTÕES */
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .btn-primary {
+            background-color: #4CAF50; /* Criar/Salvar (Verde) */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+        .btn-secondary {
+            background-color: #555; /* Editar (Cinza) */
+            color: white;
+            margin-right: 10px;
+        }
+        .btn-secondary:hover {
+            background-color: #666;
+        }
+        .btn-danger {
+            background-color: #d9534f; /* Deletar (Vermelho) */
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c9302c;
+        }
+        /* ESTILOS DA TABELA */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate; /* Para border-radius */
+            border-spacing: 0;
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow: hidden; /* Importante para bordas */
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #3a3a42;
+            text-align: left;
+        }
+        thead th {
+            background-color: #3c3c44;
+            color: #eee;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #25252b;
+        }
+        tbody tr:hover {
+            background-color: #3a3a42;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Painel de Administração de Usuários</h1>
+
+        <div class="card">
+            <h2 id="formTitle">Criar Novo Usuário</h2>
+            <form id="userForm">
+                <input type="hidden" id="userId">
+                
+                <input type="text" id="name" placeholder="Nome Completo" required>
+                <input type="email" id="email" placeholder="Email (login)" required>
+                <input type="password" id="password" placeholder="Senha (Deixe em branco para manter a atual na edição)">
+                <select id="role">
+                    <option value="user">Usuário Comum</option>
+                    <option value="admin">Administrador</option>
+                </select>
+                
+                <button type="submit" class="btn btn-primary" id="submitButton">Criar Usuário</button>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2>Usuários Cadastrados</h2>
+            <div class="table-responsive">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Cargo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api/users';
+        const form = document.getElementById('userForm');
+        const usersTableBody = document.querySelector('#usersTable tbody');
+        const userIdField = document.getElementById('userId');
+        const submitButton = document.getElementById('submitButton');
+        const formTitle = document.getElementById('formTitle');
+        const passwordField = document.getElementById('password');
+
+        // Função para obter o Token JWT do localStorage (necessário para todas as requisições admin)
+        function getAuthToken() {
+            // Supondo que o token esteja salvo em localStorage após o login
+            return localStorage.getItem('token'); 
+        }
+
+        // 1. FUNÇÃO READ (LISTAR)
+        async function fetchUsers() {
+            const token = getAuthToken();
+            if (!token) {
+                alert('Sessão expirada. Faça login como admin novamente.');
+                window.location.href = '/'; // Redireciona para a landing page ou login
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    alert('Acesso negado. Você não é um administrador ou seu token expirou.');
+                    window.location.href = '/';
+                    return;
+                }
+                if (!response.ok) throw new Error('Falha ao buscar usuários.');
+                
+                const users = await response.json();
+                renderUsers(users);
+
+            } catch (error) {
+                console.error("Erro no READ:", error);
+                alert('Erro ao carregar usuários. Verifique o console.');
+            }
+        }
+
+        // Renderiza os dados na tabela
+        function renderUsers(users) {
+            usersTableBody.innerHTML = '';
+            users.forEach(user => {
+                const row = usersTableBody.insertRow();
+                row.insertCell().textContent = user.id;
+                row.insertCell().textContent = user.name;
+                row.insertCell().textContent = user.email;
+                row.insertCell().textContent = user.role;
+                
+                const actionsCell = row.insertCell();
+                
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Editar';
+                editButton.className = 'btn btn-secondary';
+                editButton.onclick = () => loadUserForEdit(user);
+                actionsCell.appendChild(editButton);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Deletar';
+                deleteButton.className = 'btn btn-danger';
+                deleteButton.onclick = () => deleteUser(user.id);
+                actionsCell.appendChild(deleteButton);
+            });
+        }
+        
+        // 2. FUNÇÃO CREATE/UPDATE (SALVAR)
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const token = getAuthToken();
+            const userData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                role: document.getElementById('role').value,
+            };
+            const password = passwordField.value;
+
+            // Se for criação OU edição com senha preenchida, inclui a senha
+            if (password) {
+                userData.password = password;
+            }
+
+            const isEditing = userIdField.value;
+            const method = isEditing ? 'PUT' : 'POST';
+            const url = isEditing ? `${API_URL}/${isEditing}` : API_URL;
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                const responseData = await response.json();
+
+                if (!response.ok) {
+                    alert(`Erro: ${responseData.error || 'Falha na operação.'}`);
+                    throw new Error(`Status ${response.status}: ${responseData.error || 'Erro desconhecido'}`);
+                }
+
+                // Reseta o formulário
+                form.reset();
+                userIdField.value = '';
+                submitButton.textContent = 'Criar Usuário';
+                formTitle.textContent = 'Criar Novo Usuário';
+                passwordField.required = true; // Senha volta a ser obrigatória para Criação
+                fetchUsers(); // Recarrega a lista
+
+            } catch (error) {
+                console.error("Erro no CREATE/UPDATE:", error);
+            }
+        };
+
+        // Carrega dados para edição
+        function loadUserForEdit(user) {
+            userIdField.value = user.id;
+            document.getElementById('name').value = user.name;
+            document.getElementById('email').value = user.email;
+            document.getElementById('role').value = user.role;
+            passwordField.value = ''; // Limpa a senha por segurança
+            passwordField.required = false; // Senha não é obrigatória para PUT
+            submitButton.textContent = `Salvar Edição (ID: ${user.id})`;
+            formTitle.textContent = `Editando Usuário ID: ${user.id}`;
+            window.scrollTo(0, 0);
+        }
+        
+        // 3. FUNÇÃO DELETE (DELETAR)
+        async function deleteUser(id) {
+            if (!confirm(`Tem certeza que deseja DELETAR o usuário ID ${id}? Esta ação não pode ser desfeita.`)) return;
+
+            const token = getAuthToken();
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    fetchUsers();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Erro ao deletar: ${errorData.error || 'Falha na exclusão.'}`);
+                }
+
+            } catch (error) {
+                console.error("Erro no DELETE:", error);
+            }
+        }
+
+        // Inicia a aplicação
+        fetchUsers();
+    </script>
+
+</body>
+</html>

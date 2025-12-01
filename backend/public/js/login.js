@@ -51,7 +51,7 @@ form.addEventListener("submit", async (e) => {
       localStorage.setItem("token", data.token);
     }
 
-    window.location.href = "/dashboard.html";
+    window.location.href = "/html/dashboard.html";
   } catch (err) {
     console.error(err);
     errorBox.style.display = "block";
